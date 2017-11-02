@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour {
 
 	public string musicFolder = "music by neocrey";		// Music in "Resources/music by neocrey"
 	public  AudioClip[] MusicClipsPreload;
-	public GameObject enemy;
 
 	private AudioSource musicSource;
 	private AudioSource sfxSource;
@@ -45,12 +44,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetButtonDown ("Fire1") && SceneManager.GetActiveScene().name == "Game") {
-			Debug.Log ("click");
-			Vector3 createPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			createPosition.z = 1;
-			Instantiate (enemy, createPosition, Quaternion.identity);
-		}
+	//	if (Input.GetButtonDown ("Fire1") && SceneManager.GetActiveScene().name == "Game") {
+	//		Vector3 createPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+	//		createPosition.z = 0;
+	//		Instantiate (enemy, createPosition, Quaternion.identity);
+	//	}
 	}
 
 	public void LoadScene(string sceneName) {

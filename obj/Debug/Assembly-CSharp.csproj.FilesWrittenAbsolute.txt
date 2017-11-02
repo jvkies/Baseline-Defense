@@ -40,3 +40,15 @@
 /Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.CecilTools.dll
 /Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Mono.Cecil.Pdb.dll
 /Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.TestRunner.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/nunit.framework.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.Timeline.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.UIAutomation.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.GoogleAudioSpatializer.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.SpatialTracking.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.Purchasing.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.Cecil.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/ExCSS.Unity.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.Legacy.NRefactory.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.Cecil.Pdb.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.Cecil.Mdb.dll
