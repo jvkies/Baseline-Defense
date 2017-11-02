@@ -22,7 +22,6 @@ public class Mob : MonoBehaviour {
 		waypoints.Clear ();
 
 		foreach (Transform t in waypointContainer.GetComponentInChildren<Transform>()) {
-			Debug.Log (t);
 			waypoints.Enqueue (t.position);
 		}
 
@@ -46,6 +45,7 @@ public class Mob : MonoBehaviour {
 
 	void OnTriggerEnter2D ( Collider2D other) {
 		if (other.tag == "Finish") {
+			GameManager.instance.DecreaseLife (1);
 			Destroy (gameObject);
 		}
 		if (other.tag == "Waypoint") {
