@@ -1,0 +1,42 @@
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEditor.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Mono.Cecil.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Unity.DataContract.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Mono.Cecil.Mdb.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/jonathan/Documents/Unity Projects/Baseline Def/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/obj/Debug/Assembly-CSharp.dll
+/Users/jonathan/Documents/Unity Projects/Baseline Def/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/obj/Debug/Assembly-CSharp.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEditor.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Mono.Cecil.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.DataContract.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/jonathan/Documents/GitHub/Baseline-Defense.git/Temp/bin/Debug/Mono.Cecil.Mdb.dll

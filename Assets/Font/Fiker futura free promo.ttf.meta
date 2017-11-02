@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 4679d70ba29204be2b8c5499e23421fa
+timeCreated: 1509555296
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Fiker Futura
+  fontNames:
+  - Fiker Futura
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
