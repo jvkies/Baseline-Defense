@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: df0a8c595a1d944eab31f6d716e063d5
+timeCreated: 1509653192
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Flatley
+  fontNames:
+  - Flatley
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
