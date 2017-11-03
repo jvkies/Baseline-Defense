@@ -10,7 +10,7 @@ public class Mob : MonoBehaviour {
 	private Queue<Vector3> waypoints;
 	private Vector3 nextWaypoint;
 
-	public float moveSpeed = 100f;
+	public float moveSpeed = 10f;
 
 	// Use this for initialization
 	void Start () {

@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour {
 
 	public int health = 20;
 	public int money = 50;
+	public bool isDragging = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
+	public GameObject draggedTower;
 	public  AudioClip[] musicClipsPreload;
 
 	private AudioSource musicSource;
@@ -81,7 +83,7 @@ public class GameManager : MonoBehaviour {
 		sideMenuScript.UpdateHealth (health.ToString());
 
 		if (health <= 0) {
-			Debug.Log ("game over");
+			//Debug.Log ("game over");
 			// TODO: game over
 		}
 
