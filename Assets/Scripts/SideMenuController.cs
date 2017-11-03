@@ -9,9 +9,6 @@ public class SideMenuController : MonoBehaviour {
 	public Text money;
 	public GameObject Tower1;
 
-	private bool isDragging = false;
-	private GameObject draggedTower;
-
 	// Use this for initialization
 	void Start () {
 		
@@ -19,11 +16,11 @@ public class SideMenuController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (isDragging) {
-			var mousePos = Input.mousePosition;
-			mousePos.z = 2.0f;       // we want 2m away from the camera position
-			var objectPos = Camera.current.ScreenToWorldPoint(mousePos);
-			draggedTower.transform.position = objectPos;
+		if (GameManager.instance.isDragging) {
+			Vector3 objectPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			objectPos.z = 0;
+			GameManager.instance.draggedTower.transform.position = objectPos;
+		//	GameManager.instance.draggedTower.transform.position = Input.mousePosition;
 		}
 	}
 
@@ -32,12 +29,12 @@ public class SideMenuController : MonoBehaviour {
 	}
 
 	public void BuildTower(string tower) {
-		Debug.Log ("building tower " + tower);
-
-		Vector3 mousePos = Input.mousePosition;
-		mousePos.z = 2.0f;       // we want 2m away from the camera position
-		Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos);
-		GameObject draggedTower = Instantiate(Tower1, objectPos, Quaternion.identity);
-
+		if (GameManager.instance.isDragging == false) {
+			Vector3 objectPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			GameManager.instance.draggedTower = Instantiate (Tower1, objectPos, Quaternion.identity);
+			GameManager.instance.isDragging = true;
+		}
 	}
+
+
 }
