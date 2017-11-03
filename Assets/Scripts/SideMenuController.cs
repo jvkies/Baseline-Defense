@@ -36,7 +36,7 @@ public class SideMenuController : MonoBehaviour {
 
 		Vector3 mousePos = Input.mousePosition;
 		mousePos.z = 2.0f;       // we want 2m away from the camera position
-		Vector3 objectPos = Camera.current.ScreenToWorldPoint(mousePos);
+		Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos);
 		GameObject draggedTower = Instantiate(Tower1, objectPos, Quaternion.identity);
 
 	}

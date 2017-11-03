@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour {
 	
 	public static GameManager instance = null;
 
+	public int health = 20;
+	public int money = 50;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
 	public  AudioClip[] musicClipsPreload;
 
@@ -18,9 +20,6 @@ public class GameManager : MonoBehaviour {
 	private AudioSource sfxSource;
 	private SideMenuController sideMenuScript;
 	//private UnityEngine.Object[] MusicClips;
-
-	public int health = 20;
-	public int money = 50;
 
 	void Awake () {
 		if (instance == null) {
@@ -35,16 +34,24 @@ public class GameManager : MonoBehaviour {
 
 		musicSource = gameObject.GetComponents<AudioSource> ()[0];
 		sfxSource = gameObject.GetComponents<AudioSource> ()[1];
-		sideMenuScript = GameObject.FindWithTag ("SideMenuCanvas").GetComponent<SideMenuController>();
-		//SceneManager.sceneLoaded += OnLevelFinishedLoading;
+
+		SceneManager.sceneLoaded += OnSceneLoaded; 			// using a delegate here, adding our own function OnSceneLoaded, to get event calles from sceneLoaded
 
 	}
-
-	// Use this for initialization
-	void Start () {
-		// InitMusic ();  
-		// works, but music too large for github
 		
+	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		// if we start in the main menu, "SideMenuCanvas" is not present
+		try {
+			sideMenuScript = GameObject.FindWithTag ("SideMenuCanvas").GetComponent<SideMenuController>();
+		} catch {}  
+	}
+
+
+	void Start () {
+		// this works, but music files are too large for github
+		// InitMusic ();  
+
 	}
 
 	void Update() {
@@ -81,10 +88,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void InitMusic() {
-
 		try {
-			
-			//MusicClips = Resources.LoadAll(musicFolder, typeof(AudioClip)); // TAKES TO LONG
+			// WORKS BUT TAKES TO LONG
+			//MusicClips = Resources.LoadAll(musicFolder, typeof(AudioClip)); 
 
 			//if (MusicClips.Length == 0) {
 			//	throw new ApplicationException("Warning: no asd music found in: "+musicFolder);
@@ -96,8 +102,6 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Warning: no music found in: "+musicFolder);
 			Debug.Log(ex);
 		}
-
-
 	}
 		
 	IEnumerator changeMusic()
