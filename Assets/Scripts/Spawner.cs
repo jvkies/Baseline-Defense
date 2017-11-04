@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour {
 	void Start () {
 		enemyContainer = GameObject.FindWithTag("EnemyContainer");
 
-		InvokeRepeating ("SpawnMob", 1,20);
+		InvokeRepeating ("SpawnMob", 1,1);
 	}
 	
 	// Update is called once per frame

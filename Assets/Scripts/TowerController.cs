@@ -6,9 +6,11 @@ public class TowerController : MonoBehaviour {
 
 	public Transform target;
 	public Transform headToRotate;
+	public GameObject bulletPrefab;
+	public GameObject bulletSpawner;
 	public float range = 2f;
 	public float rotateSpeed = 10f;
-	public float fireRate = 2f;
+	public float fireRate = 1f;
 
 	private GameObject enemyContainer;
 	private GameObject finish;
@@ -19,7 +21,7 @@ public class TowerController : MonoBehaviour {
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
 		finish = GameObject.FindWithTag ("Finish");
 
-		InvokeRepeating ("UpdateTarget", 0,1f);
+		InvokeRepeating ("UpdateTarget", 0,0.1f);
 	}
 	
 	// Update is called once per frame
@@ -36,12 +38,12 @@ public class TowerController : MonoBehaviour {
 			if (fireCountdown <= 0f) {
 				Shoot ();
 				fireCountdown = 1f / fireRate;
-				Debug.Log ("resetting fireCountdown");
 			}
 			//Debug.Log (fireCountdown);
-			fireCountdown -= Time.deltaTime;
 			//Debug.Log (rotation);
 		}
+		fireCountdown -= Time.deltaTime;
+
 	}
 
 	private void UpdateTarget() {
@@ -70,7 +72,11 @@ public class TowerController : MonoBehaviour {
 	}
 
 	private void Shoot() {
-		Debug.Log ("peng");
+		GameObject bulletGO = Instantiate (bulletPrefab, bulletSpawner.transform.position, Quaternion.identity);
+		Bullet bullet = bulletGO.GetComponent<Bullet> ();
+
+		if (bullet != null)
+			bullet.Seek (target);
 	}
 
 	void OnDrawGizmosSelected() {

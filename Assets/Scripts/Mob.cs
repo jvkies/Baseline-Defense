@@ -11,6 +11,8 @@ public class Mob : MonoBehaviour {
 	private Vector3 nextWaypoint;
 
 	public float moveSpeed = 10f;
+	public float health = 10f;
+	public int moneyWorth = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -40,6 +42,15 @@ public class Mob : MonoBehaviour {
 
 		if (offset.magnitude > .1f) {
 			mobRb2D.velocity = new Vector3 (offset.x, offset.y);
+		}
+	}
+
+	public void TakeDamage(float amount) {
+		health -= amount;
+		if (health <= 0) {
+			GameManager.instance.money += moneyWorth;
+			GameManager.instance.UpdateMoney ();
+			Destroy (gameObject);
 		}
 	}
 

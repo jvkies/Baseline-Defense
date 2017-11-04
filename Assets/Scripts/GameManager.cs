@@ -89,6 +89,10 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	public void UpdateMoney() {
+		sideMenuScript.UpdateMoney (money.ToString());
+	}
+
 	private void InitMusic() {
 		try {
 			// WORKS BUT TAKES TO LONG

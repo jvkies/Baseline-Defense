@@ -7,7 +7,8 @@ public class SideMenuController : MonoBehaviour {
 
 	public Text health;
 	public Text money;
-	public GameObject Tower1;
+	public GameObject tower1;
+	public int tower1Price = 5;
 
 	// Use this for initialization
 	void Start () {
@@ -28,11 +29,19 @@ public class SideMenuController : MonoBehaviour {
 		health.text = amount;
 	}
 
+	public void UpdateMoney(string amount) {
+		money.text = amount;
+	}
+
+
 	public void BuildTower(string tower) {
-		if (GameManager.instance.isDragging == false) {
+		if (GameManager.instance.isDragging == false && GameManager.instance.money >= tower1Price) {
 			Vector3 objectPos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			GameManager.instance.draggedTower = Instantiate (Tower1, objectPos, Quaternion.identity);
+			GameManager.instance.draggedTower = Instantiate (tower1, objectPos, Quaternion.identity);
 			GameManager.instance.isDragging = true;
+			GameManager.instance.money -= tower1Price;
+			UpdateMoney (GameManager.instance.money.ToString());
+			Debug.Log (GameManager.instance.money);
 		}
 	}
 
