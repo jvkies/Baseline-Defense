@@ -11,17 +11,18 @@ public class GameManager : MonoBehaviour {
 	
 	public static GameManager instance = null;
 
-	public int health = 20;
-	public int money = 50;
-	public bool isDragging = false;
-	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
-	public GameObject draggedTower;
-	public  AudioClip[] musicClipsPreload;
-
 	private AudioSource musicSource;
 	private AudioSource sfxSource;
 	private SideMenuController sideMenuScript;
 	//private UnityEngine.Object[] MusicClips;
+
+	public int health = 10;
+	public int money = 25;
+	public bool isDragging = false;
+	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
+	public GameObject draggedTower;
+	public  AudioClip[] musicClipsPreload;
+	public Dictionary<string, Tower> tower;
 
 	void Awake () {
 		if (instance == null) {
@@ -39,6 +40,11 @@ public class GameManager : MonoBehaviour {
 
 		SceneManager.sceneLoaded += OnSceneLoaded; 			// using a delegate here, adding our own function OnSceneLoaded, to get event calles from sceneLoaded
 
+		tower = new Dictionary<string, Tower>();
+		tower.Add("bullettower1",new Tower(1,"Bullet Tower",5,3,1,1,2));
+		tower.Add("bullettower2",new Tower(2,"Bullet Tower",10,5,2,2,3));
+		tower.Add("bullettower3",new Tower(3,"Bullet Tower",15,7,3,3,4));
+
 	}
 		
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -55,13 +61,12 @@ public class GameManager : MonoBehaviour {
 		// InitMusic ();  
 
 	}
-
+		
 	void Update() {
-	//	if (Input.GetButtonDown ("Fire1") && SceneManager.GetActiveScene().name == "Game") {
-	//		Vector3 createPosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-	//		createPosition.z = 0;
-	//		Instantiate (enemy, createPosition, Quaternion.identity);
-	//	}
+		if (Input.GetKeyDown (KeyCode.Escape) && isDragging == true) {
+			isDragging = false;
+			Destroy (draggedTower);
+		}
 	}
 
 	public void LoadScene(string sceneName) {

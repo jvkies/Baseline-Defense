@@ -5,7 +5,6 @@ using UnityEngine;
 public class Mob : MonoBehaviour {
 
 	private Rigidbody2D mobRb2D;
-	private Transform finish;
 	private GameObject waypointContainer;
 	private Queue<Vector3> waypoints;
 	private Vector3 nextWaypoint;
@@ -13,12 +12,12 @@ public class Mob : MonoBehaviour {
 	public float moveSpeed = 10f;
 	public float health = 10f;
 	public int moneyWorth = 1;
+	public float incomingDmg = 0;
 
 	// Use this for initialization
 	void Start () {
 		waypointContainer = GameObject.FindWithTag("WaypointContainer");
 		mobRb2D = GetComponent<Rigidbody2D> ();
-		finish = GameObject.FindWithTag ("Finish").transform;
 
 		waypoints = new Queue<Vector3> ();
 		waypoints.Clear ();

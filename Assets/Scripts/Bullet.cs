@@ -33,10 +33,12 @@ public class Bullet : MonoBehaviour {
 
 	private void HitTarget() {
 		target.GetComponent<Mob> ().TakeDamage (damage);
+		target.GetComponent<Mob> ().incomingDmg -= damage;
 		Destroy (gameObject);
 	}
 
 	public void Seek(Transform _target) {
 		target = _target;
+		target.GetComponent<Mob> ().incomingDmg += damage;
 	}
 }

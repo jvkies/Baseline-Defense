@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class TowerController : MonoBehaviour {
 
+	private float fireCountdown = 0f;
+	private GameObject enemyContainer;
+	private GameObject finish;
+
+	public float range = 2f;
+	public float rotateSpeed = 10f;
+	public float fireRate = 1f;
 	public Transform target;
 	public Transform headToRotate;
 	public GameObject bulletPrefab;
 	public GameObject bulletSpawner;
-	public float range = 2f;
-	public float rotateSpeed = 10f;
-	public float fireRate = 1f;
-
-	private GameObject enemyContainer;
-	private GameObject finish;
-	private float fireCountdown = 0f;
+	public GameObject rangeEffect;
 
 	// Use this for initialization
 	void Start () {
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
 		finish = GameObject.FindWithTag ("Finish");
 
-		InvokeRepeating ("UpdateTarget", 0,0.1f);
+		//InvokeRepeating ("UpdateTarget", 0,0.1f);
 	}
 	
 	// Update is called once per frame
@@ -46,6 +47,10 @@ public class TowerController : MonoBehaviour {
 
 	}
 
+	public void ActivateTower() {
+		InvokeRepeating ("UpdateTarget", 0,0.1f);
+	}
+
 	private void UpdateTarget() {
 		float shortestDistance = Mathf.Infinity;
 		Transform closestEnemy = null;
@@ -53,7 +58,7 @@ public class TowerController : MonoBehaviour {
 
 		foreach (Transform enemy in enemyContainer.transform) {
 
-			if (Vector3.Distance (enemy.position, transform.position) < range) {
+			if (Vector3.Distance (enemy.position, transform.position) < range && enemy.GetComponent<Mob>().incomingDmg <= enemy.GetComponent<Mob>().health) {
 				enemysInRange.Add(enemy);
 			}
 
@@ -62,6 +67,7 @@ public class TowerController : MonoBehaviour {
 		foreach (Transform enemy in enemysInRange) {
 			
 			float distanceEnemyToFinish = Vector3.Distance (enemy.position, finish.transform.position);
+
 			if (distanceEnemyToFinish < shortestDistance) {
 				shortestDistance = distanceEnemyToFinish;
 				closestEnemy = enemy;

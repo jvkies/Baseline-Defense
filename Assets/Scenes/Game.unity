@@ -5024,14 +5024,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.74509805, g: 0.74509805, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: c0d9e8cb48aa04694ad53cd899939cf4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f0fd7ae06beb5428e8a5cb9242150714, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10418,7 +10418,6 @@ MonoBehaviour:
   health: {fileID: 303827453}
   money: {fileID: 516202162}
   tower1: {fileID: 1105225280237348, guid: 8d0ea9a01bd824472a5bf4fc1d2bea9f, type: 2}
-  tower1Price: 10
 --- !u!4 &717432750 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4161728787435400, guid: 4dbb87abb796e4726bd5a4a7c4e4e9ab,
@@ -25111,6 +25110,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4161728787435400, guid: 4dbb87abb796e4726bd5a4a7c4e4e9ab, type: 2}
       propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212578198471938742, guid: 4dbb87abb796e4726bd5a4a7c4e4e9ab,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: -310599149
+      objectReference: {fileID: 0}
+    - target: {fileID: 212578198471938742, guid: 4dbb87abb796e4726bd5a4a7c4e4e9ab,
+        type: 2}
+      propertyPath: m_SortingLayer
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
