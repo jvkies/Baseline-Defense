@@ -7,19 +7,24 @@ public class TowerController : MonoBehaviour {
 	private float fireCountdown = 0f;
 	private GameObject enemyContainer;
 	private GameObject finish;
+	private GameObject sideMenu;
 
-	public float range = 2f;
+	//public float range = 2f;
 	public float rotateSpeed = 10f;
 	public float fireRate = 1f;
+	public float sellMultiplier = 0.5f;
+	public Tower towerStats;
 	public Transform target;
 	public Transform headToRotate;
 	public GameObject bulletPrefab;
 	public GameObject bulletSpawner;
 	public GameObject rangeEffect;
+	public GameObject selectedEffect;
 
 	// Use this for initialization
 	void Start () {
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
+		sideMenu = GameObject.FindWithTag ("SideMenuCanvas");
 		finish = GameObject.FindWithTag ("Finish");
 
 		//InvokeRepeating ("UpdateTarget", 0,0.1f);
@@ -40,10 +45,18 @@ public class TowerController : MonoBehaviour {
 				Shoot ();
 				fireCountdown = 1f / fireRate;
 			}
-			//Debug.Log (fireCountdown);
-			//Debug.Log (rotation);
 		}
+
 		fireCountdown -= Time.deltaTime;
+
+		if (Input.GetMouseButtonDown (1) && GameManager.instance.isDragging == false) {
+			selectTower (false);
+		}
+
+		if (Input.GetKeyDown (KeyCode.S) && GameManager.instance.isTowerSelected == true && GameManager.instance.selectedTower == gameObject) {
+			SellTower ();
+		}
+
 
 	}
 
@@ -58,7 +71,7 @@ public class TowerController : MonoBehaviour {
 
 		foreach (Transform enemy in enemyContainer.transform) {
 
-			if (Vector3.Distance (enemy.position, transform.position) < range && enemy.GetComponent<Mob>().incomingDmg <= enemy.GetComponent<Mob>().health) {
+			if (Vector3.Distance (enemy.position, transform.position) < towerStats.towerRange && enemy.GetComponent<Mob>().incomingDmg <= enemy.GetComponent<Mob>().health) {
 				enemysInRange.Add(enemy);
 			}
 
@@ -85,8 +98,48 @@ public class TowerController : MonoBehaviour {
 			bullet.Seek (target);
 	}
 
+	public void OnMouseOver() {
+		if (Input.GetMouseButtonDown (0)) {
+			if (GameManager.instance.isTowerSelected == true) {
+				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
+			}
+			if (GameManager.instance.isDragging != true) {
+				selectTower (true);
+			}
+		}
+
+	}
+
+	public void selectTower( bool active) {
+		if (active == true) {
+			GameManager.instance.isTowerSelected = true;
+			GameManager.instance.selectedTower = gameObject;
+			sideMenu.GetComponent<SideMenuController> ().sellButton.SetActive (true);
+			selectedEffect.SetActive (true);
+			rangeEffect.SetActive (true);
+		} else {
+			GameManager.instance.isTowerSelected = false;
+			GameManager.instance.selectedTower = null;
+			sideMenu.GetComponent<SideMenuController> ().sellButton.SetActive (false);
+			selectedEffect.SetActive (false);
+			rangeEffect.SetActive (false);
+
+		}
+	}
+
+	public void SellTower() {
+		selectTower (false);
+		GameManager.instance.money += towerStats.towerCost * sellMultiplier;
+		GameManager.instance.UpdateMoney ();
+		Destroy (gameObject);
+	}
+
+	public void UpgradeTower() {
+
+	}
+
 	void OnDrawGizmosSelected() {
 		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere (transform.position, range );
+		Gizmos.DrawWireSphere (transform.position, towerStats.towerRange );
 	}
 }

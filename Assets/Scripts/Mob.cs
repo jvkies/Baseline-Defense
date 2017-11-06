@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Mob : MonoBehaviour {
 
@@ -10,9 +11,11 @@ public class Mob : MonoBehaviour {
 	private Vector3 nextWaypoint;
 
 	public float moveSpeed = 10f;
+	public float maxHealth = 10f;
 	public float health = 10f;
 	public int moneyWorth = 1;
 	public float incomingDmg = 0;
+	public Image HealthBar;
 
 	// Use this for initialization
 	void Start () {
@@ -46,6 +49,7 @@ public class Mob : MonoBehaviour {
 
 	public void TakeDamage(float amount) {
 		health -= amount;
+		HealthBar.fillAmount = health / maxHealth ;
 		if (health <= 0) {
 			GameManager.instance.money += moneyWorth;
 			GameManager.instance.UpdateMoney ();

@@ -7,11 +7,15 @@ public class TowerSpot : MonoBehaviour {
 
 	private SpriteRenderer sr;
 	private Color defaultColor;
+	private GameObject sideMenu;
+	private GameObject towerInSlot = null;
 
 	public GameObject tower1;
 
 	// Use this for initialization
 	void Start () {
+		sideMenu = GameObject.FindWithTag ("SideMenuCanvas");
+
 		sr = gameObject.GetComponent<SpriteRenderer> ();
 		defaultColor = sr.color;
 	}
@@ -44,30 +48,36 @@ public class TowerSpot : MonoBehaviour {
 		tower.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
 		tower.GetComponent<TowerController> ().ActivateTower ();
 		tower.GetComponent<TowerController> ().rangeEffect.SetActive (false);
+		towerInSlot = tower;
 		GameManager.instance.money -= GameManager.instance.tower["bullettower1"].towerCost;
 		GameManager.instance.UpdateMoney ();
 
 	}
 
 	public void OnMouseOver() {
-		if (GameManager.instance.isDragging == true) {
+		if (GameManager.instance.isTowerSelected == true) {
 			if (Input.GetMouseButtonDown (0)) {
+				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
+			}
+		}
+		if (GameManager.instance.isDragging == true) {
+			if (Input.GetMouseButtonDown (0) && towerInSlot == null) {
 
 				PutDragInSlot (GameManager.instance.draggedTower);
 
 				if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {
 					if (GameManager.instance.money >= GameManager.instance.tower["bullettower1"].towerCost) { //TODO get towerprice from GameManager
-						Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-						GameManager.instance.draggedTower = Instantiate (tower1, mousePos, Quaternion.identity);
-						GameManager.instance.isDragging = true;
-						//GameManager.instance.money -= 10; //TODO get towerprice from GameManager
-						GameManager.instance.UpdateMoney ();
+						sideMenu.GetComponent<SideMenuController>().InstantiateTower(GameManager.instance.draggedTower.GetComponent<TowerController>().towerStats.towerID);
+						//Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+						//GameManager.instance.draggedTower = Instantiate (tower1, mousePos, Quaternion.identity);
+						//GameManager.instance.isDragging = true;
 					} else {
 						GameManager.instance.isDragging = false;
 					}
 				} else {
 					GameManager.instance.isDragging = false;
 				}
+
 						
 			}
 		

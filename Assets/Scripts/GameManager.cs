@@ -17,11 +17,13 @@ public class GameManager : MonoBehaviour {
 	//private UnityEngine.Object[] MusicClips;
 
 	public int health = 10;
-	public int money = 25;
+	public float money = 25;
 	public bool isDragging = false;
+	public bool isTowerSelected = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
 	public GameObject draggedTower;
-	public  AudioClip[] musicClipsPreload;
+	public GameObject selectedTower;
+	public AudioClip[] musicClipsPreload;
 	public Dictionary<string, Tower> tower;
 
 	void Awake () {
@@ -41,9 +43,9 @@ public class GameManager : MonoBehaviour {
 		SceneManager.sceneLoaded += OnSceneLoaded; 			// using a delegate here, adding our own function OnSceneLoaded, to get event calles from sceneLoaded
 
 		tower = new Dictionary<string, Tower>();
-		tower.Add("bullettower1",new Tower(1,"Bullet Tower",5,3,1,1,2));
-		tower.Add("bullettower2",new Tower(2,"Bullet Tower",10,5,2,2,3));
-		tower.Add("bullettower3",new Tower(3,"Bullet Tower",15,7,3,3,4));
+		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower",5,3,1,1,2));
+		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower",10,5,2,2,3));
+		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower",15,7,3,3,4));
 
 	}
 		
