@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 212648863451974074}
   - component: {fileID: 58650532920299596}
   - component: {fileID: 50601229537206792}
-  - component: {fileID: 114302153924922430}
+  - component: {fileID: 114798294213003174}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Yellow Blob Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,8 +89,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1395960154840638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1321399, y: -1.3401573, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalPosition: {x: -12.175018, y: -2.0339546, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 224136436352994630}
   m_Father: {fileID: 0}
@@ -152,23 +152,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114302153924922430
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1395960154840638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7d0bdf8422544110952a6560d73c02f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 100
-  maxHealth: 10
-  health: 10
-  moneyWorth: 1
-  incomingDmg: 0
-  HealthBar: {fileID: 114613925073543434}
 --- !u!114 &114613925073543434
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,6 +179,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114798294213003174
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1395960154840638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6408f749270044c7a0912815cd2343c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthBar: {fileID: 114613925073543434}
 --- !u!114 &114937214231898088
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -274,7 +269,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f9fbdc215526c4673bf7f0e9016f71b3, type: 3}
-  m_Color: {r: 1, g: 0.759, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7607843, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -313,7 +308,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 1266408389
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!224 &224136436352994630
 RectTransform:

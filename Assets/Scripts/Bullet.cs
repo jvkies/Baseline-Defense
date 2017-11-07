@@ -5,8 +5,10 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	private Transform target;
-	public float bulletVelocity = 8f;
-	public float damage = 4f;
+
+	public float bulletVelocity = 8f; 
+	[HideInInspector] 
+	public float damage;
 
 	// Use this for initialization
 	void Start () {
@@ -32,13 +34,13 @@ public class Bullet : MonoBehaviour {
 	}
 
 	private void HitTarget() {
-		target.GetComponent<Mob> ().TakeDamage (damage);
-		target.GetComponent<Mob> ().incomingDmg -= damage;
+		target.GetComponent<MobController> ().TakeDamage (damage);
+		target.GetComponent<MobController> ().mobData.incomingDmg -= damage;
 		Destroy (gameObject);
 	}
 
 	public void Seek(Transform _target) {
 		target = _target;
-		target.GetComponent<Mob> ().incomingDmg += damage;
+		target.GetComponent<MobController> ().mobData.incomingDmg += damage;
 	}
 }

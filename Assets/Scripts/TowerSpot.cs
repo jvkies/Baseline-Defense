@@ -7,14 +7,14 @@ public class TowerSpot : MonoBehaviour {
 
 	private SpriteRenderer sr;
 	private Color defaultColor;
-	private GameObject sideMenu;
+	private GameObject menuCanvas;
 	private GameObject towerInSlot = null;
 
 	public GameObject tower1;
 
 	// Use this for initialization
 	void Start () {
-		sideMenu = GameObject.FindWithTag ("SideMenuCanvas");
+		menuCanvas = GameObject.FindWithTag ("MenuCanvas");
 
 		sr = gameObject.GetComponent<SpriteRenderer> ();
 		defaultColor = sr.color;
@@ -44,6 +44,9 @@ public class TowerSpot : MonoBehaviour {
 		tower.transform.position = gameObject.transform.position;
 		tower.transform.localScale = new Vector3 (1, 1, 1);
 		tower.layer = 0;
+		tower.GetComponent<SpriteRenderer> ().sortingLayerName = "Objects";
+		tower.GetComponentsInChildren<SpriteRenderer> () [1].sortingLayerName = "Objects";
+
 		tower.GetComponent<SpriteRenderer> ().sortingOrder -= 2;
 		tower.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
 		tower.GetComponent<TowerController> ().ActivateTower ();
@@ -67,7 +70,7 @@ public class TowerSpot : MonoBehaviour {
 
 				if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {
 					if (GameManager.instance.money >= GameManager.instance.tower["bullettower1"].towerCost) { //TODO get towerprice from GameManager
-						sideMenu.GetComponent<SideMenuController>().InstantiateTower(GameManager.instance.draggedTower.GetComponent<TowerController>().towerStats.towerID);
+						menuCanvas.GetComponent<MenuController>().InstantiateTower(GameManager.instance.draggedTower.GetComponent<TowerController>().towerStats.towerID);
 						//Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 						//GameManager.instance.draggedTower = Instantiate (tower1, mousePos, Quaternion.identity);
 						//GameManager.instance.isDragging = true;

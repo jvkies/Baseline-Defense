@@ -12,7 +12,7 @@ public class Tower {
 	public int towerShootspeed;		// frequency the tower is shooting
 	public float towerRange;			// range a tower locks onto targets
 
-	public Tower(string _towerID, string _towerName, int _towerCost, int _towerDamage, int _towerLevel, int _towerShootspeed, int _towerRange) {
+	public Tower(string _towerID, string _towerName, float _towerCost, int _towerDamage, int _towerLevel, int _towerShootspeed, float _towerRange) {
 		towerID = _towerID;
 		towerName = _towerName;
 		towerCost = _towerCost;
@@ -20,5 +20,10 @@ public class Tower {
 		towerLevel = _towerLevel;
 		towerShootspeed = _towerShootspeed;
 		towerRange = _towerRange;
+	}
+
+	public Tower Copy() {
+		Tower copy = new Tower (towerID, towerName, towerCost, towerDamage, towerLevel, towerShootspeed, towerRange);
+		return copy;
 	}
 }

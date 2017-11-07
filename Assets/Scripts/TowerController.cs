@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TowerController : MonoBehaviour {
 
 	private float fireCountdown = 0f;
 	private GameObject enemyContainer;
 	private GameObject finish;
-	private GameObject sideMenu;
+	private GameObject menuCanvas;
 
 	//public float range = 2f;
 	public float rotateSpeed = 10f;
@@ -24,7 +25,7 @@ public class TowerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
-		sideMenu = GameObject.FindWithTag ("SideMenuCanvas");
+		menuCanvas = GameObject.FindWithTag ("MenuCanvas");
 		finish = GameObject.FindWithTag ("Finish");
 
 		//InvokeRepeating ("UpdateTarget", 0,0.1f);
@@ -42,8 +43,10 @@ public class TowerController : MonoBehaviour {
 			headToRotate.rotation = Quaternion.Lerp(headToRotate.rotation, Quaternion.AngleAxis(angle, Vector3.forward), Time.deltaTime * rotateSpeed);
 
 			if (fireCountdown <= 0f) {
-				Shoot ();
-				fireCountdown = 1f / fireRate;
+				if (target.GetComponent<MobController> ().mobData.incomingDmg <= target.GetComponent<MobController> ().mobData.health) {
+					Shoot ();
+					fireCountdown = 1f / fireRate;
+				}
 			}
 		}
 
@@ -71,7 +74,7 @@ public class TowerController : MonoBehaviour {
 
 		foreach (Transform enemy in enemyContainer.transform) {
 
-			if (Vector3.Distance (enemy.position, transform.position) < towerStats.towerRange && enemy.GetComponent<Mob>().incomingDmg <= enemy.GetComponent<Mob>().health) {
+			if (Vector3.Distance (enemy.position, transform.position) < towerStats.towerRange && enemy.GetComponent<MobController>().mobData.incomingDmg <= enemy.GetComponent<MobController>().mobData.health) {
 				enemysInRange.Add(enemy);
 			}
 
@@ -93,6 +96,7 @@ public class TowerController : MonoBehaviour {
 	private void Shoot() {
 		GameObject bulletGO = Instantiate (bulletPrefab, bulletSpawner.transform.position, Quaternion.identity);
 		Bullet bullet = bulletGO.GetComponent<Bullet> ();
+		bullet.damage = towerStats.towerDamage;
 
 		if (bullet != null)
 			bullet.Seek (target);
@@ -114,13 +118,17 @@ public class TowerController : MonoBehaviour {
 		if (active == true) {
 			GameManager.instance.isTowerSelected = true;
 			GameManager.instance.selectedTower = gameObject;
-			sideMenu.GetComponent<SideMenuController> ().sellButton.SetActive (true);
+
+			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats.towerName, towerStats.towerDamage, towerStats.towerShootspeed, towerStats.towerRange, towerStats.towerCost);
+
 			selectedEffect.SetActive (true);
 			rangeEffect.SetActive (true);
 		} else {
 			GameManager.instance.isTowerSelected = false;
 			GameManager.instance.selectedTower = null;
-			sideMenu.GetComponent<SideMenuController> ().sellButton.SetActive (false);
+
+			menuCanvas.GetComponent<MenuController> ().HideTowerMenu();
+
 			selectedEffect.SetActive (false);
 			rangeEffect.SetActive (false);
 

@@ -1,71 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Mob : MonoBehaviour {
+public class Mob {
 
-	private Rigidbody2D mobRb2D;
-	private GameObject waypointContainer;
-	private Queue<Vector3> waypoints;
-	private Vector3 nextWaypoint;
+	public string mobID;					// mob id, must be unique
+	public string mobName;					// name of the mob
+	public int moneyWorth;
+	public float moveSpeed;
+	public float maxHealth;
+	public float health;
+	public float incomingDmg;
+	public int mobHeartDamage;			// damage the mob does to the players heart
+	public GameObject mobPrefab;
 
-	public float moveSpeed = 10f;
-	public float maxHealth = 10f;
-	public float health = 10f;
-	public int moneyWorth = 1;
-	public float incomingDmg = 0;
-	public Image HealthBar;
-
-	// Use this for initialization
-	void Start () {
-		waypointContainer = GameObject.FindWithTag("WaypointContainer");
-		mobRb2D = GetComponent<Rigidbody2D> ();
-
-		waypoints = new Queue<Vector3> ();
-		waypoints.Clear ();
-
-		foreach (Transform t in waypointContainer.GetComponentInChildren<Transform>()) {
-			waypoints.Enqueue (t.position);
-		}
-
-		nextWaypoint = waypoints.Dequeue ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		MoveTowardsTarget (nextWaypoint);
+	public Mob(string _mobID, string _mobName, int _moneyWorth, float _moveSpeed, float _maxHealth, float _health, float _incomingDmg, int _mobHeartDamage, GameObject _mobPrefab) {
+		mobID = _mobID;
+		mobName = _mobName;
+		moneyWorth = _moneyWorth;
+		moveSpeed = _moveSpeed;
+		maxHealth = _maxHealth;
+		health = _health;
+		incomingDmg = _incomingDmg;
+		mobHeartDamage = _mobHeartDamage;
+		mobPrefab = _mobPrefab;
 	}
 
-	public void MoveTowardsTarget(Vector3 target) {
-		var offset = target - transform.position;
-
-		offset = offset.normalized * (moveSpeed) * Time.deltaTime;
-
-		if (offset.magnitude > .1f) {
-			mobRb2D.velocity = new Vector3 (offset.x, offset.y);
-		}
+	public Mob Copy() {
+		Mob copy = new Mob (mobID, mobName, moneyWorth, moveSpeed, maxHealth, health, incomingDmg, mobHeartDamage, mobPrefab);
+		return copy;
 	}
-
-	public void TakeDamage(float amount) {
-		health -= amount;
-		HealthBar.fillAmount = health / maxHealth ;
-		if (health <= 0) {
-			GameManager.instance.money += moneyWorth;
-			GameManager.instance.UpdateMoney ();
-			Destroy (gameObject);
-		}
-	}
-
-	void OnTriggerEnter2D ( Collider2D other) {
-		if (other.tag == "Finish") {
-			GameManager.instance.DecreaseLife (1);
-			Destroy (gameObject);
-		}
-		if (other.tag == "Waypoint") {
-			nextWaypoint = waypoints.Dequeue ();
-		}
-
-	}
-
 }

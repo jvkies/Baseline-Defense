@@ -213,7 +213,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8dc317259e2d479280aafdb66a41ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicFolder: music by neocrey
-  musicClipsPreload: []
   health: 20
   money: 50
+  isDragging: 0
+  isTowerSelected: 0
+  musicFolder: music by neocrey
+  draggedTower: {fileID: 0}
+  selectedTower: {fileID: 0}
+  musicClipsPreload: []
+  blob1: {fileID: 1395960154840638, guid: cd34b62f37431477ab32ccb065851266, type: 2}
+  blob2: {fileID: 1395960154840638, guid: f4b1b04c36f4047f2a312a52edf1d73e, type: 2}
+  blob1Boss: {fileID: 1395960154840638, guid: 2b85c5616edf6476ebe606464043a213, type: 2}
