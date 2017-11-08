@@ -39,20 +39,20 @@ public class TowerSpot : MonoBehaviour {
 		Debug.Log(gameObject.name);
 	}
 
-	private void PutDragInSlot(GameObject tower) {
-		tower.transform.SetParent (gameObject.transform);
-		tower.transform.position = gameObject.transform.position;
-		tower.transform.localScale = new Vector3 (1, 1, 1);
-		tower.layer = 0;
-		tower.GetComponent<SpriteRenderer> ().sortingLayerName = "Objects";
-		tower.GetComponentsInChildren<SpriteRenderer> () [1].sortingLayerName = "Objects";
+	private void PutDragInSlot(GameObject towerInstance) {
+		towerInstance.transform.SetParent (gameObject.transform);
+		towerInstance.transform.position = gameObject.transform.position;
+		towerInstance.transform.localScale = new Vector3 (1, 1, 1);
+		towerInstance.layer = 0;
+		towerInstance.GetComponent<SpriteRenderer> ().sortingLayerName = "Objects";
+		towerInstance.GetComponentsInChildren<SpriteRenderer> () [1].sortingLayerName = "Objects";
+		towerInstance.GetComponent<SpriteRenderer> ().sortingOrder -= 2;
+		towerInstance.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
+		towerInstance.GetComponent<TowerController> ().ActivateTower ();
+		towerInstance.GetComponent<TowerController> ().rangeEffect.SetActive (false);
+		towerInSlot = towerInstance;
 
-		tower.GetComponent<SpriteRenderer> ().sortingOrder -= 2;
-		tower.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
-		tower.GetComponent<TowerController> ().ActivateTower ();
-		tower.GetComponent<TowerController> ().rangeEffect.SetActive (false);
-		towerInSlot = tower;
-		GameManager.instance.money -= GameManager.instance.tower["bullettower1"].towerCost;
+		GameManager.instance.money -= towerInstance.GetComponent<TowerController> ().towerStats.towerCost;
 		GameManager.instance.UpdateMoney ();
 
 	}
@@ -69,7 +69,7 @@ public class TowerSpot : MonoBehaviour {
 				PutDragInSlot (GameManager.instance.draggedTower);
 
 				if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {
-					if (GameManager.instance.money >= GameManager.instance.tower["bullettower1"].towerCost) { //TODO get towerprice from GameManager
+					if (GameManager.instance.money >= GameManager.instance.draggedTower.GetComponent<TowerController> ().towerStats.towerCost) {
 						menuCanvas.GetComponent<MenuController>().InstantiateTower(GameManager.instance.draggedTower.GetComponent<TowerController>().towerStats.towerID);
 						//Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 						//GameManager.instance.draggedTower = Instantiate (tower1, mousePos, Quaternion.identity);

@@ -16,9 +16,13 @@ public class MenuController : MonoBehaviour {
 	public GameObject towerMenuPanel;
 	public GameObject escapeMenuPanel;
 	public Text damageValue;
-	public Text attackSpeedValue;
+	public Text fireRateValue;
 	public Text rangeValue;
 	public Text costValue;
+	public GameObject upgradeDamageValue;
+	public GameObject upgradeFireRateValue;
+	public GameObject upgradeRangeValue;
+	public GameObject upgradeCostValue;
 
 	// Use this for initialization
 	void Start () {
@@ -69,13 +73,41 @@ public class MenuController : MonoBehaviour {
 		}
 	}
 
-	public void DisplayTowerMenu(string _towerName, int _towerDamage, int _towerShootspeed, float _towerRange, float _towerCost, bool isSellEnablbed = true) {
-		damageValue.text = _towerDamage.ToString();
-		attackSpeedValue.text = _towerShootspeed.ToString();
-		rangeValue.text = _towerRange.ToString();
-		costValue.text = _towerCost.ToString();
-		towerName.GetComponent<Text> ().text = _towerName;
-		sellButton.SetActive (isSellEnablbed);
+	public void DisplayTowerMenu(Tower towerStats, bool isNoPreview = true) {
+	//	DisplayTowerMenu (towerStats.towerName, towerStats.towerDamage, towerStats.towerFireRate, towerStats.towerRange, towerStats.towerCost, towerStats.upgradeID);
+	//}
+
+	//public void DisplayTowerMenu(string _towerName, int _towerDamage, int _towerShootspeed, float _towerRange, float _towerCost, string _towerUpgradeID, bool isNoPreview = true) { // isNoPreview determines wether the displayed tower is already build or is just a preview
+		damageValue.text = towerStats.towerDamage.ToString();
+		fireRateValue.text = towerStats.towerFireRate.ToString();
+		rangeValue.text = towerStats.towerRange.ToString();
+		costValue.text = towerStats.towerCost.ToString();
+
+
+		towerName.GetComponent<Text> ().text = towerStats.towerName;
+
+		sellButton.SetActive (isNoPreview);
+		upgradeButton.SetActive (isNoPreview);
+		upgradeDamageValue.SetActive (isNoPreview);
+		upgradeRangeValue.SetActive (isNoPreview);
+		upgradeFireRateValue.SetActive (isNoPreview);
+		upgradeCostValue.SetActive (isNoPreview);
+
+		if (towerStats.upgradeID == null) {
+			upgradeButton.SetActive (false);
+			upgradeDamageValue.SetActive (false);
+			upgradeRangeValue.SetActive (false);
+			upgradeFireRateValue.SetActive (false);
+			upgradeCostValue.SetActive (false);
+
+		} else {
+			Tower upgradeTower = GameManager.instance.tower [towerStats.upgradeID];
+			upgradeDamageValue.GetComponent<Text> ().text = upgradeTower.towerDamage.ToString();
+			upgradeFireRateValue.GetComponent<Text> ().text = upgradeTower.towerFireRate.ToString();
+			upgradeRangeValue.GetComponent<Text> ().text = upgradeTower.towerRange.ToString();
+			upgradeCostValue.GetComponent<Text> ().text = towerStats.upgradeCost.ToString();
+
+		}
 		towerMenuPanel.SetActive (true);
 
 	}

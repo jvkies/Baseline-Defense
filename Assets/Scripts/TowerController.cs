@@ -6,17 +6,18 @@ using UnityEngine.UI;
 public class TowerController : MonoBehaviour {
 
 	private float fireCountdown = 0f;
+	private Dictionary<int, int> rangeMap;		// the towerRange doest scale with the visual rangeEffect, so we have to map in manually
 	private GameObject enemyContainer;
 	private GameObject finish;
 	private GameObject menuCanvas;
 
 	//public float range = 2f;
+	public float rangeOffset=1f;
 	public float rotateSpeed = 10f;
-	public float fireRate = 1f;
 	public float sellMultiplier = 0.5f;
 	public Tower towerStats;
 	public Transform target;
-	public Transform headToRotate;
+	public GameObject towerHead;
 	public GameObject bulletPrefab;
 	public GameObject bulletSpawner;
 	public GameObject rangeEffect;
@@ -24,10 +25,15 @@ public class TowerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		rangeMap = new Dictionary<int, int> ();
+		rangeMap.Add (2, 5);
+		rangeMap.Add (3, 7);
+		rangeMap.Add (4, 9);
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
 		menuCanvas = GameObject.FindWithTag ("MenuCanvas");
 		finish = GameObject.FindWithTag ("Finish");
 
+		rangeEffect.transform.localScale = new Vector3 (visualRange(towerStats.towerRange), visualRange(towerStats.towerRange), 1);
 		//InvokeRepeating ("UpdateTarget", 0,0.1f);
 	}
 	
@@ -40,12 +46,12 @@ public class TowerController : MonoBehaviour {
 			//headToRotate.rotation = Quaternion.Euler (0, 0f, rotation.x);
 
 			var angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg)-90;
-			headToRotate.rotation = Quaternion.Lerp(headToRotate.rotation, Quaternion.AngleAxis(angle, Vector3.forward), Time.deltaTime * rotateSpeed);
+			towerHead.transform.rotation = Quaternion.Lerp(towerHead.transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), Time.deltaTime * rotateSpeed);
 
 			if (fireCountdown <= 0f) {
 				if (target.GetComponent<MobController> ().mobData.incomingDmg <= target.GetComponent<MobController> ().mobData.health) {
 					Shoot ();
-					fireCountdown = 1f / fireRate;
+					fireCountdown = 1f / towerStats.towerFireRate;
 				}
 			}
 		}
@@ -60,11 +66,22 @@ public class TowerController : MonoBehaviour {
 			SellTower ();
 		}
 
+		if (Input.GetKeyDown (KeyCode.U) && GameManager.instance.isTowerSelected == true && GameManager.instance.selectedTower == gameObject) {
+			UpgradeTower ();
+		}
 
 	}
 
 	public void ActivateTower() {
 		InvokeRepeating ("UpdateTarget", 0,0.1f);
+	}
+
+	public float visualRange(float towerRangeStat) {		// converts the towerRangeStat e.g. 2 to the visual range of the rangeEffect
+		return towerRangeStat*2+1;
+	}
+
+	public float actualRange(float towerRangeStat) {		// converts the towerRangeStat to the correct distance on the map the tower can shoot at
+		return (towerRangeStat+0.5f)/2f;
 	}
 
 	private void UpdateTarget() {
@@ -74,7 +91,7 @@ public class TowerController : MonoBehaviour {
 
 		foreach (Transform enemy in enemyContainer.transform) {
 
-			if (Vector3.Distance (enemy.position, transform.position) < towerStats.towerRange && enemy.GetComponent<MobController>().mobData.incomingDmg <= enemy.GetComponent<MobController>().mobData.health) {
+			if (Vector3.Distance (enemy.position, transform.position) < actualRange(towerStats.towerRange) && enemy.GetComponent<MobController>().mobData.incomingDmg <= enemy.GetComponent<MobController>().mobData.health) {
 				enemysInRange.Add(enemy);
 			}
 
@@ -119,7 +136,7 @@ public class TowerController : MonoBehaviour {
 			GameManager.instance.isTowerSelected = true;
 			GameManager.instance.selectedTower = gameObject;
 
-			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats.towerName, towerStats.towerDamage, towerStats.towerShootspeed, towerStats.towerRange, towerStats.towerCost);
+			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats);
 
 			selectedEffect.SetActive (true);
 			rangeEffect.SetActive (true);
@@ -143,11 +160,24 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public void UpgradeTower() {
+		// Destroy instance and create a new or update values?
 
+		if (towerStats.upgradeID != null && GameManager.instance.money >= towerStats.upgradeCost) {
+			GameManager.instance.UpdateMoney (towerStats.upgradeCost * -1);
+			towerStats = GameManager.instance.tower [towerStats.upgradeID];	// updating its stats
+			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats);
+			towerHead.GetComponent<SpriteRenderer> ().sprite = towerStats.towerImageHead;
+			rangeEffect.transform.localScale = new Vector3 (visualRange(towerStats.towerRange), visualRange(towerStats.towerRange), 1);
+
+		}
 	}
 
 	void OnDrawGizmosSelected() {
 		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere (transform.position, towerStats.towerRange );
+		Gizmos.DrawWireSphere (transform.position, actualRange(towerStats.towerRange));
 	}
 }
+
+// 2:1.25
+// 3:1.75
+// 4:2.25

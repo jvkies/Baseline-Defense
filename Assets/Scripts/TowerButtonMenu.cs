@@ -16,12 +16,16 @@ public class TowerButtonMenu : MonoBehaviour, IPointerEnterHandler, IPointerExit
 	{
 		// TODO: im getting the information what Tower Button was hovered on from the gmaeObject.name, not good...
 		Tower tower = GameManager.instance.tower [gameObject.name];
-		menuScript.DisplayTowerMenu (tower.towerName, tower.towerDamage, tower.towerShootspeed, tower.towerRange, tower.towerCost, false);
+		menuScript.DisplayTowerMenu (tower, false);
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		menuScript.HideTowerMenu ();
+		if (GameManager.instance.isTowerSelected) {
+			menuScript.DisplayTowerMenu (GameManager.instance.selectedTower.GetComponent<TowerController>().towerStats);
+		} else {
+			menuScript.HideTowerMenu ();
+		}
 	}
 
 }
