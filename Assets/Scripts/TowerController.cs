@@ -16,6 +16,7 @@ public class TowerController : MonoBehaviour {
 	public float sellMultiplier = 0.5f;
 	public Tower towerStats;
 	public Transform target;
+	public GameObject towerSpot;			// the spot the tower is in
 	public GameObject towerHead;
 	public GameObject bulletPrefab;
 	public GameObject bulletSpawner;
@@ -123,7 +124,7 @@ public class TowerController : MonoBehaviour {
 
 	public void OnMouseOver() {
 		// TODO: BUG: cant select tower, tower doesnt get this OnMouseOver() Event
-//		Debug.Log ("onMouseOver: " + gameObject.name);
+		Debug.Log ("onMouseOver: " + gameObject.name);
 		if (Input.GetMouseButtonDown (0)) {
 			if (GameManager.instance.isTowerSelected == true) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
@@ -159,6 +160,9 @@ public class TowerController : MonoBehaviour {
 	public void SellTower() {
 		selectTower (false);
 		//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
+		towerSpot.GetComponent<BoxCollider2D> ().enabled = true;
+		towerSpot.GetComponent<TowerSpot>().towerInSlot = null;
+
 		GameManager.instance.UpdateSouls (towerStats.towerCost * sellMultiplier);
 		Destroy (gameObject);
 	}

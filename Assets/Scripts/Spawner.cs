@@ -14,6 +14,7 @@ public class Spawner : MonoBehaviour {
 	private Vector3 spawnPos;
 	private GameObject enemyContainer;
 	private MenuController menuCanvas;
+	private Image buttonEffectImage;
 
 	public int maxWaveAmount = 100;				// maximum numbers of waves
 	public float healthScaleFactor = 0.6f;		// scale factor the health of the mobs increase per wave
@@ -28,6 +29,7 @@ public class Spawner : MonoBehaviour {
 	void Start () {
 		enemyContainer = GameObject.FindWithTag("EnemyContainer");
 		menuCanvas = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
+		buttonEffectImage = buttonEffect.GetComponent<Image> ();
 		waveCount = 0;
 
 		waves = new Dictionary<int, Wave>();
@@ -51,7 +53,7 @@ public class Spawner : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		buttonEffect.GetComponent<Image> ().color = Color.Lerp (standardColor, highlightColor, colorCurve.Evaluate (deltaSum));
+		buttonEffectImage.color = Color.Lerp (standardColor, highlightColor, colorCurve.Evaluate (deltaSum));
 		deltaSum += Time.deltaTime;
 
 		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf) {

@@ -9,8 +9,8 @@ public class TowerSpot : MonoBehaviour {
 	private Color defaultColor;
 	private GameObject menuCanvas;
 	private Transform enemyContainer;
-	private GameObject towerInSlot = null;
 
+	public GameObject towerInSlot = null;
 	public GameObject tower1;
 	public AstarPath astarPath;
 
@@ -72,9 +72,11 @@ public class TowerSpot : MonoBehaviour {
 			towerInstance.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
 			towerInstance.GetComponent<TowerController> ().ActivateTower ();
 			towerInstance.GetComponent<TowerController> ().rangeEffect.SetActive (false);
+			towerInstance.GetComponent<TowerController> ().towerSpot = gameObject;
 			towerInSlot = towerInstance;
 			towerInstance.layer = 1;
 		
+			gameObject.GetComponent<BoxCollider2D> ().enabled = false;
 
 			// add the new tower as unpassable to our Navigation Grid
 			AstarPath.active.UpdateGraphs (towerInstance.GetComponent<BoxCollider2D> ().bounds);

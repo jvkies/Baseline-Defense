@@ -119,14 +119,14 @@ public class GameManager : MonoBehaviour {
 		tower = new Dictionary<string, Tower>();
 		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,0,8,new Vector2(0.05f,0.05f),bullettower1Head));
 		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,15,5,2,2,3,0,8,new Vector2(0.05f,0.05f),bullettower2Head));
-		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",30,25,7,3,2.5f,4,0,8,new Vector2(0.05f,0.05f),bullettower3Head));
-		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",55,40,10,4,3,4.5f,0,8,new Vector2(0.05f,0.05f),bullettower4Head));
-		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,90,0,13,5,3.5f,5,0,8,new Vector2(0.05f,0.05f),bullettower5Head));
-		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.4f,4,0.7f,4,new Vector2(0.15f,0.15f),rocktower1Head));
+		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",30,30,7,3,2.5f,4,0,8,new Vector2(0.05f,0.05f),bullettower3Head));
+		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",60,50,10,4,3,4.5f,0,8,new Vector2(0.05f,0.05f),bullettower4Head));
+		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,110,0,13,5,3.5f,5,0,8,new Vector2(0.05f,0.05f),bullettower5Head));
+		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.5f,4,0.7f,4,new Vector2(0.15f,0.15f),rocktower1Head));
 		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.5f,4.5f,0.8f,4,new Vector2(0.15f,0.15f),rocktower2Head));
-		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.6f,5,0.8f,4,new Vector2(0.15f,0.15f),rocktower3Head));
-		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.65f,5.5f,1,4,new Vector2(0.15f,0.15f),rocktower4Head));
-		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.7f,6,1.2f,4,new Vector2(0.15f,0.15f),rocktower5Head));
+		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.5f,5,0.8f,4,new Vector2(0.15f,0.15f),rocktower3Head));
+		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.5f,5.5f,1,4,new Vector2(0.15f,0.15f),rocktower4Head));
+		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.5f,6,1.2f,4,new Vector2(0.15f,0.15f),rocktower5Head));
 
 		mobs = new Dictionary<string, Mob>();
 		mobs.Add("blob",new Mob("blob","Blob",1,1,10,10,0,1,blob));
