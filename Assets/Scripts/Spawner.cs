@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour {
 
 	private int waveCount;
+	private float waitBetweenMobs = 0.3f;
 	private float deltaSum = 0;
+	//private string[] waveMobs = { "blob", "blob", "fastblob", "airblob", "blobboss", "blob", "blob", "fastblob", "airblob", "fastboss", "blob", "blob", "fastblob", "airblob", "airboss"};
+	//private int[] waveMobsAmount = { 20,30,30,30,1,30,30,30,30,1,30,30,30,30,1 };
+	private Vector3 spawnPos;
 	private GameObject enemyContainer;
-	private GameObject menuCanvas;
-	private Color32 highlightColor = new Color32 (255, 255, 0, 255);
-	private Color32 standardColor = new Color32 (216, 18, 15, 255);
+	private MenuController menuCanvas;
 
+	public int maxWaveAmount = 100;				// maximum numbers of waves
+	public float healthScaleFactor = 0.6f;		// scale factor the health of the mobs increase per wave
+	public Color32 highlightColor = new Color32 (255, 255, 0, 255);
+	public Color32 standardColor = new Color32 (216, 18, 15, 255);
 	public Dictionary<int, Wave> waves;
-	public GameObject spawner;
 	public GameObject buttonEffect;
 	public GameObject startWaveContainer;
 	public AnimationCurve colorCurve;
@@ -21,18 +27,25 @@ public class Spawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		enemyContainer = GameObject.FindWithTag("EnemyContainer");
-		menuCanvas = GameObject.FindWithTag ("MenuCanvas");
+		menuCanvas = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 		waveCount = 0;
 
 		waves = new Dictionary<int, Wave>();
-		waves.Add(1,new Wave(1,"blob1",10));
-		waves.Add(2,new Wave(2,"blob1",20));
-		//waves.Add(3,new Wave(3,"blob1",30));
-		waves.Add(3,new Wave(3,"blobboss1",1));
-		waves.Add(4,new Wave(4,"blob2",10));
-		waves.Add(5,new Wave(5,"blob2",20));
-		//waves.Add(7,new Wave(7,"blob2",30));
-		waves.Add(6,new Wave(6,"blobboss2",1));
+
+	//	for (int waveCount = 0; waveCount < waveMobs.Length; waveCount++) {
+	//		waves.Add(waveCount,new Wave(waveCount,waveMobs[waveCount],waveMobsAmount[waveCount]));
+	//	}
+			
+	//	waves.Add(1,new Wave(1,"blob1",20));
+	//	waves.Add(2,new Wave(2,"blob1",20));
+	//	waves.Add(3,new Wave(3,"blob1",20));
+	//	waves.Add(4,new Wave(4,"blob1",20));
+	//	waves.Add(5,new Wave(5,"blobboss1",1));
+
+	//	waves.Add(6,new Wave(6,"blob2",20));
+	//	waves.Add(7,new Wave(7,"blob2",20));
+	//	waves.Add(8,new Wave(8,"blob2",30));
+	//	waves.Add(9,new Wave(9,"blobboss2",1));
 
 	}
 
@@ -40,59 +53,153 @@ public class Spawner : MonoBehaviour {
 	void Update () {
 		buttonEffect.GetComponent<Image> ().color = Color.Lerp (standardColor, highlightColor, colorCurve.Evaluate (deltaSum));
 		deltaSum += Time.deltaTime;
+
+		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf) {
+			// TODO: only if the next wave should be able to be called..
+			NextWave ();
+		}
+
+
+	}
+
+	public Transform GetRandomSpawnSpot() {
+		return gameObject.transform.GetChild (Random.Range (0, gameObject.transform.childCount));
+	}
+
+	public string NextMob(int _waveID) {
+		if (_waveID % 10 == 2 || _waveID % 10 == 8)
+			return "groupblob";
+		else if (_waveID % 10 == 4)
+			return "fastblob";
+		else if (_waveID % 10 == 6)
+			return "airblob";
+		else if (_waveID % 10 == 0) {
+			if (_waveID % 30 == 20)
+				return "fastboss";
+			else if (_waveID % 30 == 0)
+				return "airboss";
+			else
+				return "blobboss";
+		}
+		
+		return "blob";
+	}
+
+	public int MobsPerWave(int _waveID, string _mobID) {
+		if (_mobID == "blobboss" || _mobID == "fastboss" || _mobID == "airboss")
+			return 1;
+		else
+			return 15 + _waveID;
 	}
 
 	public IEnumerator StartWave(int waveID) {
-		menuCanvas.GetComponent<MenuController> ().waveDisplayer.GetComponent<Text> ().text = "Wave " + waveID.ToString ();
-		menuCanvas.GetComponent<MenuController> ().waveDisplayer.SetActive (true);
+		string mobID = NextMob (waveID);
+		int mobPerWave = MobsPerWave(waveID, mobID); 
+			
+		menuCanvas.waveDisplayer.GetComponent<Text> ().text = "Wave " + (waveID).ToString ();
+		menuCanvas.waveDisplayer.SetActive (true);
 		yield return new WaitForSeconds(3);
-		menuCanvas.GetComponent<MenuController>().waveDisplayer.SetActive(false);
+		menuCanvas.waveDisplayer.SetActive(false);
 
-		while (waves [waveID].mobAmount > 0) {
-			yield return new WaitForSeconds(1);
-			SpawnMob (waves [waveID].mobID);
-			waves [waveID].mobAmount -= 1;
-		}
-		if (waves.ContainsKey (waveID + 1)) {
-			if (GameManager.instance.isGameLost == false) {
-				startWaveContainer.SetActive (true);
-			}
+		if (mobID == "groupblob") {
+			// TODO: this works, but no aoe tower yet
+			waitBetweenMobs = 0;
+			spawnPos = GetRandomSpawnSpot ().position;
 		} else {
-			// we are in the final wave
-			while (enemyContainer.transform.childCount != 0) {
-				yield return new WaitForSeconds(1);
-
-			}
-
-			if (GameManager.instance.isGameLost != true) {
-				menuCanvas.GetComponent<MenuController> ().DisplayWin ();
-			}
-
+			waitBetweenMobs = 0.3f;
 		}
+
+		while (mobPerWave > 0) {
+			yield return new WaitForSeconds(waitBetweenMobs);
+			SpawnMob (mobID, waveID);
+			mobPerWave -= 1;
+		}
+
+		while (enemyContainer.transform.childCount != 0) {
+			yield return new WaitForSeconds(1);
+		}
+
+		if (GameManager.instance.isGameLost == false) {
+			if (waveID != maxWaveAmount) {
+				startWaveContainer.SetActive (true);
+			} else {
+				if (GameManager.instance.isGameLost != true) {
+					menuCanvas.DisplayWin ();
+				}
+			}
+		}
+
 	}
 
-	public void SpawnMob(string mobType) {
+	public Mob ScaleMob(Mob _mob, int waveID) {
+		// TODO: add additional to the linear component (+6hp every round) a percantage base of the total hp
+		_mob.health += _mob.health * healthScaleFactor * (waveID-1);
+		_mob.maxHealth += _mob.maxHealth * healthScaleFactor * (waveID-1);
+		_mob.moneyWorth += Mathf.FloorToInt( _mob.moneyWorth * 0.1f * waveID );
+		_mob.mobHeartDamage += Mathf.FloorToInt( _mob.mobHeartDamage * 0.1f * waveID );
 
-		GameObject mob = Instantiate (GameManager.instance.mobs[mobType].mobPrefab, spawner.transform.position, Quaternion.identity);
+		if (waveID > 10) {
+			_mob.health += _mob.health * 0.5f;
+			_mob.maxHealth += _mob.maxHealth * 0.5f;
+		}
+		if (waveID > 20) {
+			_mob.health += _mob.health * 0.5f;
+			_mob.maxHealth += _mob.maxHealth * 0.5f;
+		}
+		if (waveID > 30) {
+			_mob.health += _mob.health * 0.5f;
+			_mob.maxHealth += _mob.maxHealth * 0.5f;
+		}
+		if (waveID > 40) {
+			_mob.health += _mob.health * 0.5f;
+			_mob.maxHealth += _mob.maxHealth * 0.5f;
+		}
+		if (waveID > 50) {
+			_mob.health += _mob.health * 0.5f;
+			_mob.maxHealth += _mob.maxHealth * 0.5f;
+		}
 
-		// we are using a copy of the stored instance of Mob
-		mob.GetComponent<MobController> ().mobData = GameManager.instance.mobs [mobType].Copy();
+		return _mob;
+	}
 
+	public void SpawnMob(string mobID, int waveID) {
+				
+		if (mobID != "groupblob") {
+			// TODO: to active groupblob: uncomment the next line and deleete the duplicate below
+			spawnPos = GetRandomSpawnSpot ().position;
+		}
+		else
+			mobID = "blob";
+
+		//spawnPos = GetRandomSpawnSpot ().position;
+
+		GameObject mob = Instantiate (GameManager.instance.mobs[mobID].mobPrefab, spawnPos, Quaternion.identity);
+
+		mob.GetComponent<MobController> ().mobData = ScaleMob(GameManager.instance.mobs [mobID].Copy(),waveID);
+		if (waveID > 10)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (255, 50, 50,255);
+		if (waveID > 20)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (82, 138, 255,255);
+		if (waveID > 30)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (50, 200, 50,255);
+		if (waveID > 30)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (0, 200, 200,255);
+		if (waveID > 40)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (200, 50, 200,255);
+		
 		if (enemyContainer != null) {
 			mob.transform.SetParent (enemyContainer.transform);
 		}
-
-		//yield return new WaitForSeconds(1);
-
-
+			
 	}
 
 	public void NextWave() {
 		waveCount += 1;
+		//if (waveCount != 1)
+		//	GameManager.instance.UpdateSouls (Mathf.Ceil(GameManager.instance.souls/2f));
 
 		startWaveContainer.SetActive (false);
 		StartCoroutine(StartWave(waveCount));
-		//InvokeRepeating ("SpawnMob", 1,1);
 
 	}
 }

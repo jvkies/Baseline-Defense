@@ -10,6 +10,8 @@ TagManager:
   - Spawnblock
   - EscapeMenuCanvas
   - MenuCanvas
+  - HealthbarContainer
+  - TowerSpotContainer
   layers:
   - Default
   - TransparentFX

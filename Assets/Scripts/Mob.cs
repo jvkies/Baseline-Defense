@@ -7,7 +7,7 @@ public class Mob {
 	public string mobID;					// mob id, must be unique
 	public string mobName;					// name of the mob
 	public int moneyWorth;
-	public float moveSpeed;
+	public float moveSpeed;	// TODO: use this by Astar Pathfinding
 	public float maxHealth;
 	public float health;
 	public float incomingDmg;

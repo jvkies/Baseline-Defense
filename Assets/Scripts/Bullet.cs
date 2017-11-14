@@ -5,16 +5,19 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	private Transform target;
+	private Transform enemyContainer;
 
-	public float bulletVelocity = 8f; 
+	public float aoeRange = 0.2f;
+
+	public float velocity = 8f; 
 	[HideInInspector] 
 	public float damage;
 
-	// Use this for initialization
-	void Start () {
-		
+	void Start() {
+		enemyContainer = GameObject.FindWithTag ("EnemyContainer").transform;
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if (target == null) {
@@ -23,9 +26,15 @@ public class Bullet : MonoBehaviour {
 		}
 
 		Vector3 dir = target.position - transform.position;
-		float distanceThisFrame = bulletVelocity * Time.deltaTime;
+		float distanceThisFrame = velocity * Time.deltaTime;
 
 		if (dir.magnitude <= distanceThisFrame) {
+			if (aoeRange != 0) {
+				for (int i = 0; i < enemyContainer.childCount; i++) {
+					if ((enemyContainer.GetChild (i).transform.position - transform.position).magnitude <= aoeRange)
+						enemyContainer.GetChild (i).GetComponent<MobController> ().TakeDamage (damage);
+				}
+			}
 			HitTarget ();
 			return;
 		}

@@ -5,58 +5,64 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour {
 
-	public Text health;
+	private GameObject towerToInstantiate;
+		
+	public Text souls;
 	public Text money;
 	public GameObject towerName;
 	public GameObject sellButton;
 	public GameObject upgradeButton;
-	public GameObject bulletTower1Prefab;
-	public GameObject bulletTower1Button;
+	public GameObject bulletTowerPrefab;
+	//public GameObject bulletTowerButton;
+	public GameObject rockTowerPrefab;
+	public GameObject rockTowerButton;
 	public GameObject waveDisplayer;
 	public GameObject towerMenuPanel;
 	public GameObject escapeMenuPanel;
-	public Text damageValue;
-	public Text fireRateValue;
-	public Text rangeValue;
-	public Text costValue;
 	public GameObject upgradeDamageValue;
 	public GameObject upgradeFireRateValue;
 	public GameObject upgradeRangeValue;
 	public GameObject upgradeCostValue;
+	public Text damageValue;
+	public Text fireRateValue;
+	public Text rangeValue;
+	public Text costValue;
+	public GameObject startWaveContainer;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
 	void Update () {
 		if (GameManager.instance.isDragging) {
-			Vector3 objectPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			objectPos.z = 0;
-			GameManager.instance.draggedTower.transform.position = objectPos;
-		//	GameManager.instance.draggedTower.transform.position = Input.mousePosition;
+			Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			GameManager.instance.draggedTower.transform.position = mousePos;
 		}
 	}
 
-	public void UpdateHealth(string amount) {
-		health.text = amount;
+	public void UpdateSouls(string amount) {
+		souls.text = amount;
 	}
 
-	public void UpdateMoney(string amount) {
-		money.text = amount;
-	}
+	// TODO: deprecated
+	//public void UpdateHealth(string amount) {
+		//health.text = amount;
+	//}
+
+	// TODO: deprecated
+//	public void UpdateMoney(string amount) {
+//		money.text = amount;
+//	}
 
 	public void InstantiateTower(string towerID) {
-		Vector3 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		GameManager.instance.draggedTower = Instantiate (bulletTower1Prefab, mousePos, Quaternion.identity);
+		if (towerID == "rocktower1")
+			towerToInstantiate = rockTowerPrefab;
+		else
+			towerToInstantiate = bulletTowerPrefab;
+		Vector2 mousePos = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		GameManager.instance.draggedTower = Instantiate (towerToInstantiate, mousePos, Quaternion.identity);
 		GameManager.instance.draggedTower.GetComponent<TowerController> ().towerStats = GameManager.instance.tower [towerID].Copy();	// TowerController knows what tower its holding
 		GameManager.instance.isDragging = true;
-
 	}
 
 	public void BuildTower(string towerID) {
-		if (GameManager.instance.isDragging == false && GameManager.instance.money >= GameManager.instance.tower[towerID].towerCost) {
+		if (GameManager.instance.isDragging == false && GameManager.instance.souls > GameManager.instance.tower[towerID].towerCost) {
 			InstantiateTower (towerID);
 		}
 	}
@@ -74,15 +80,10 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void DisplayTowerMenu(Tower towerStats, bool isNoPreview = true) {
-	//	DisplayTowerMenu (towerStats.towerName, towerStats.towerDamage, towerStats.towerFireRate, towerStats.towerRange, towerStats.towerCost, towerStats.upgradeID);
-	//}
-
-	//public void DisplayTowerMenu(string _towerName, int _towerDamage, int _towerShootspeed, float _towerRange, float _towerCost, string _towerUpgradeID, bool isNoPreview = true) { // isNoPreview determines wether the displayed tower is already build or is just a preview
 		damageValue.text = towerStats.towerDamage.ToString();
 		fireRateValue.text = towerStats.towerFireRate.ToString();
 		rangeValue.text = towerStats.towerRange.ToString();
 		costValue.text = towerStats.towerCost.ToString();
-
 
 		towerName.GetComponent<Text> ().text = towerStats.towerName;
 
@@ -136,6 +137,10 @@ public class MenuController : MonoBehaviour {
 			escapeMenuPanel.SetActive (true);
 			Time.timeScale = 0;
 		}
+	}
+
+	public void ExitApplication() {
+		Application.Quit ();
 	}
 
 	public void LoadMainScene() {

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class TowerController : MonoBehaviour {
 
 	private float fireCountdown = 0f;
-	private Dictionary<int, int> rangeMap;		// the towerRange doest scale with the visual rangeEffect, so we have to map in manually
 	private GameObject enemyContainer;
 	private GameObject finish;
 	private GameObject menuCanvas;
@@ -25,10 +24,7 @@ public class TowerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		rangeMap = new Dictionary<int, int> ();
-		rangeMap.Add (2, 5);
-		rangeMap.Add (3, 7);
-		rangeMap.Add (4, 9);
+
 		enemyContainer = GameObject.FindWithTag ("EnemyContainer");
 		menuCanvas = GameObject.FindWithTag ("MenuCanvas");
 		finish = GameObject.FindWithTag ("Finish");
@@ -114,12 +110,20 @@ public class TowerController : MonoBehaviour {
 		GameObject bulletGO = Instantiate (bulletPrefab, bulletSpawner.transform.position, Quaternion.identity);
 		Bullet bullet = bulletGO.GetComponent<Bullet> ();
 		bullet.damage = towerStats.towerDamage;
+		bullet.velocity = towerStats.bulletVelocity;
+		bullet.aoeRange = towerStats.aoeRange;
+		bullet.transform.localScale = towerStats.bulletSize;
+		// TODO: store bullet size / type in Tower class
+		//if (towerStats.towerID == "rocktower1" || towerStats.towerID == "rocktower2" || towerStats.towerID == "rocktower3")
+		//	bullet.transform.localScale = new Vector2 (0.15f, 0.15f);
 
 		if (bullet != null)
 			bullet.Seek (target);
 	}
 
 	public void OnMouseOver() {
+		// TODO: BUG: cant select tower, tower doesnt get this OnMouseOver() Event
+//		Debug.Log ("onMouseOver: " + gameObject.name);
 		if (Input.GetMouseButtonDown (0)) {
 			if (GameManager.instance.isTowerSelected == true) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
@@ -154,16 +158,16 @@ public class TowerController : MonoBehaviour {
 
 	public void SellTower() {
 		selectTower (false);
-		GameManager.instance.money += towerStats.towerCost * sellMultiplier;
-		GameManager.instance.UpdateMoney ();
+		//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
+		GameManager.instance.UpdateSouls (towerStats.towerCost * sellMultiplier);
 		Destroy (gameObject);
 	}
 
 	public void UpgradeTower() {
 		// Destroy instance and create a new or update values?
 
-		if (towerStats.upgradeID != null && GameManager.instance.money >= towerStats.upgradeCost) {
-			GameManager.instance.UpdateMoney (towerStats.upgradeCost * -1);
+		if (towerStats.upgradeID != null && GameManager.instance.souls > towerStats.upgradeCost) {
+			GameManager.instance.UpdateSouls (-towerStats.upgradeCost);
 			towerStats = GameManager.instance.tower [towerStats.upgradeID];	// updating its stats
 			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats);
 			towerHead.GetComponent<SpriteRenderer> ().sprite = towerStats.towerImageHead;

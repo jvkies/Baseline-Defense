@@ -14,7 +14,6 @@ public class MainMenu : MonoBehaviour {
 	void Update () {
 		if (Input.GetKey ("escape"))
 			Application.Quit ();
-
 	}
 
 
@@ -24,7 +23,9 @@ public class MainMenu : MonoBehaviour {
 		//isTransitioning = true;
 		GameManager.instance.PlaySfx (newGameSfx);
 
-		Invoke ("LoadSceneLazy", 2f);
+	//	Invoke ("LoadSceneLazy", 2f);
+		GameManager.instance.LoadScene ("Game");
+
 	}
 
 	public void LoadSceneLazy() {

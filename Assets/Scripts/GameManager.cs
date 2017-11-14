@@ -14,11 +14,14 @@ public class GameManager : MonoBehaviour {
 	private AudioSource musicSource;
 	private AudioSource sfxSource;
 	private MenuController menuScript;
-	private Spawner spawnblock;
-	//private UnityEngine.Object[] MusicClips;
+	private Transform towerSpots;
+	//private Spawner spawnblock;
+	//private UnityEngine.Object[] MusicClips;			// Music disabled due to long load times
 
-	public int health = 10;
-	public float money = 250;
+	//public int health = 10;
+	public float souls = 61;
+//	public float money = 25;
+	public int wallPercent = 7;
 	public bool isDragging = false;
 	public bool isTowerSelected = false;
 	public bool isGameLost = false;
@@ -28,20 +31,28 @@ public class GameManager : MonoBehaviour {
 	public AudioClip[] musicClipsPreload;
 	public Dictionary<string, Tower> tower;
 	public Dictionary<string, Mob> mobs;
-	public GameObject blob1;
-	public GameObject blob2;
-	public GameObject blobBoss1;
-	public GameObject blobBoss2;
+	public GameObject wallPrefab;
+	public GameObject blob;
+	public GameObject fastBlob;
+	public GameObject airBlob;
+	public GameObject blobBoss;
+	public GameObject fastBoss;
+	public GameObject airBoss;
 	public Sprite bullettower1Head;
 	public Sprite bullettower2Head;
 	public Sprite bullettower3Head;
+	public Sprite bullettower4Head;
+	public Sprite bullettower5Head;
+	public Sprite rocktower1Head;
+	public Sprite rocktower2Head;
+	public Sprite rocktower3Head;
+	public Sprite rocktower4Head;
+	public Sprite rocktower5Head;
 
 
 	void Awake () {
 		if (instance == null) {
 			instance = this;
-
-			//playerData = new PlayerData ();
 		}
 		else if (instance != this)
 			Destroy (gameObject);
@@ -51,38 +62,31 @@ public class GameManager : MonoBehaviour {
 		musicSource = gameObject.GetComponents<AudioSource> ()[0];
 		sfxSource = gameObject.GetComponents<AudioSource> ()[1];
 
-		SceneManager.sceneLoaded += OnSceneLoaded; 			// using a delegate here, adding our own function OnSceneLoaded to get event calles from sceneLoaded
-
-		tower = new Dictionary<string, Tower>();
-		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,bullettower1Head));
-		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,15,5,2,2,3,bullettower2Head));
-		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3",null,30,0,7,3,3,4,bullettower3Head));
-
-		mobs = new Dictionary<string, Mob>();
-		mobs.Add("blob1",new Mob("blob1","Yellow Blob",1,100,10,10,0,1,blob1));
-		mobs.Add("blob2",new Mob("blob2","Red Blob",2,100,30,30,0,2,blob2));
-		mobs.Add("blobboss1",new Mob("blobboss1","Yellow Blob Boss",20,80,150,150,0,5,blobBoss1));
-		mobs.Add("blobboss2",new Mob("blobboss1","Red Blob Boss",40,80,600,600,0,9,blobBoss2));
-
+		SceneManager.sceneLoaded += OnSceneLoaded; 		// using a delegate here, adding our own function OnSceneLoaded to get event calles from sceneLoaded
 	}
 		
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		// if we start in the main menu, "MenuCanvas" is not present
+		// if we start in the main menu, "MenuCanvas" and "Spawnblock" are not present
 		try {
 			menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController>();
-			spawnblock = GameObject.FindWithTag ("Spawnblock").GetComponent<Spawner>();
+			towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
+			//spawnblock = GameObject.FindWithTag ("Spawnblock").GetComponent<Spawner>();
 
-			menuScript.UpdateHealth(health.ToString());
-			menuScript.UpdateMoney(money.ToString());
-		} catch {}  
+			InitWalls ();
+
+			//menuScript.UpdateHealth(health.ToString());
+			menuScript.UpdateSouls(souls.ToString());
+		//	menuScript.UpdateMoney(money.ToString());
+		} catch {} 
+
 	}
 
 
 	void Start () {
-		// this works, but music files are too large for github
-		// InitMusic ();  
+		// InitMusic ();  								// this works, but music files are too large for github, skipping
 
+		InitData ();
 	}
 		
 	void Update() {
@@ -91,7 +95,6 @@ public class GameManager : MonoBehaviour {
 				isDragging = false;
 				Destroy (draggedTower);
 			} else {
-				//escapeMenu. SetActive (true);
 				menuScript.ToggleEscapeMenu();
 			}
 		}
@@ -105,7 +108,45 @@ public class GameManager : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Alpha1)) {
 			menuScript.BuildTower ("bullettower1");
 		}
+		if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			menuScript.BuildTower ("rocktower1");
+		}
 
+			
+	}
+
+	private void InitData() {
+		tower = new Dictionary<string, Tower>();
+		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,0,8,new Vector2(0.05f,0.05f),bullettower1Head));
+		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,15,5,2,2,3,0,8,new Vector2(0.05f,0.05f),bullettower2Head));
+		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",30,25,7,3,2.5f,4,0,8,new Vector2(0.05f,0.05f),bullettower3Head));
+		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",55,40,10,4,3,4.5f,0,8,new Vector2(0.05f,0.05f),bullettower4Head));
+		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,90,0,13,5,3.5f,5,0,8,new Vector2(0.05f,0.05f),bullettower5Head));
+		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.4f,4,0.7f,4,new Vector2(0.15f,0.15f),rocktower1Head));
+		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.5f,4.5f,0.8f,4,new Vector2(0.15f,0.15f),rocktower2Head));
+		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.6f,5,0.8f,4,new Vector2(0.15f,0.15f),rocktower3Head));
+		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.65f,5.5f,1,4,new Vector2(0.15f,0.15f),rocktower4Head));
+		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.7f,6,1.2f,4,new Vector2(0.15f,0.15f),rocktower5Head));
+
+		mobs = new Dictionary<string, Mob>();
+		mobs.Add("blob",new Mob("blob","Blob",1,1,10,10,0,1,blob));
+		mobs.Add("fastblob",new Mob("fastblob","Fast Blob",1,1.5f,8,8,0,1,fastBlob));
+		mobs.Add("airblob",new Mob("airblob","Flying Blob",1,0.75f,10,10,0,1,airBlob));
+		mobs.Add("blobboss",new Mob("blobboss","Blob Boss",20,0.75f,130,130,0,5,blobBoss));
+		mobs.Add("fastboss",new Mob("fastboss","Fast Blob Boss",20,1.25f,140,140,0,5,fastBoss));
+		mobs.Add("airboss",new Mob("airboss","Air Blob Boss",20,0.75f,140,140,0,5,airBoss));
+	}
+
+	public void InitWalls() {
+		Debug.Log ("using tower coverage: " + wallPercent.ToString());
+		for (int i = 0; i < towerSpots.childCount; i++) {
+			if (Random.Range (0, 100) < wallPercent) {	// 
+				GameObject wallInstance = Instantiate(wallPrefab,towerSpots.GetChild (i).position,Quaternion.identity);
+				wallInstance.transform.SetParent(towerSpots.GetChild (i));
+				AstarPath.active.UpdateGraphs (wallInstance.GetComponent<BoxCollider2D> ().bounds);
+
+			}
+		}
 
 	}
 
@@ -115,34 +156,40 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void GameOver() {
-		LoadScene ("GameOver");
+		// LoadScene ("GameOver");
 	}
 
 	public void MainMenuScene() {
-		//playerData = new PlayerData ();
+		ResetPlayerdata ();
 		LoadScene ("MainMenu");
 	}		
 		
-	public void DecreaseLife(int amount) {
-		health -= amount;
-		menuScript.UpdateHealth (health.ToString());
+	public void ResetPlayerdata() {
+		// TODO: defined starting amount
+		souls = 61;
+		//health = 10;
+		//money = 25;
+	}
 
-		if (health <= 0) {
+	public void UpdateSouls(float amount) {
+		souls += amount;
+
+		if (souls <= 0) {
+			souls = 0;
 			isGameLost = true;
 			menuScript.DisplayLoose();
-			spawnblock.startWaveContainer.SetActive (false);
-
-			// TODO: game over
+			menuScript.startWaveContainer.SetActive (false);
 		}
+
+		menuScript.UpdateSouls (souls.ToString());
 
 	}
 
-	public void UpdateMoney(float changeAmount=0) {
-		if (changeAmount != 0) {
-			money += changeAmount;
-		}
-		menuScript.UpdateMoney (money.ToString());
-	}
+	// TODO: deprecated
+//	public void UpdateMoney(float changeAmount=0) {
+//		money += changeAmount;
+//		menuScript.UpdateMoney (money.ToString());
+//	}
 
 	private void InitMusic() {
 		try {
@@ -161,6 +208,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 		
+	// changeMusic() will wait until the current song ends and randomly play a new song
 	IEnumerator changeMusic()
 	{
 		yield return new WaitForSeconds(musicSource.clip.length);
