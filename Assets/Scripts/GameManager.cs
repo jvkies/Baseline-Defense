@@ -39,16 +39,6 @@ public class GameManager : MonoBehaviour {
 	public GameObject blobBoss;
 	public GameObject fastBoss;
 	public GameObject airBoss;
-	public Sprite bullettower1Head;
-	public Sprite bullettower2Head;
-	public Sprite bullettower3Head;
-	public Sprite bullettower4Head;
-	public Sprite bullettower5Head;
-	public Sprite rocktower1Head;
-	public Sprite rocktower2Head;
-	public Sprite rocktower3Head;
-	public Sprite rocktower4Head;
-	public Sprite rocktower5Head;
 	public Sprite bullettowerHeadWhite;
 	public Sprite rocktowerHeadWhite;
 

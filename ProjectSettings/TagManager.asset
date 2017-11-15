@@ -12,6 +12,8 @@ TagManager:
   - MenuCanvas
   - HealthbarContainer
   - TowerSpotContainer
+  - Mob
+  - TowerSpot
   layers:
   - Default
   - TransparentFX

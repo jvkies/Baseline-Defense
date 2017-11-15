@@ -229,16 +229,6 @@ MonoBehaviour:
   blobBoss: {fileID: 1395960154840638, guid: 2b85c5616edf6476ebe606464043a213, type: 2}
   fastBoss: {fileID: 1395960154840638, guid: 37825fba9d4664006b793706f1af2d15, type: 2}
   airBoss: {fileID: 1395960154840638, guid: b7d59582a3481459093acd2dd06e417c, type: 2}
-  bullettower1Head: {fileID: 21300000, guid: 50dcef186af06494094649c8c8b15e67, type: 3}
-  bullettower2Head: {fileID: 21300000, guid: ae5441d4de4f84926888469a85a783d8, type: 3}
-  bullettower3Head: {fileID: 21300000, guid: 56d9210ab955d45a5b353659f28cff4a, type: 3}
-  bullettower4Head: {fileID: 21300000, guid: e52299e5ba2714dc8b610c63e30b1147, type: 3}
-  bullettower5Head: {fileID: 21300000, guid: 6db22a5ca62424403aa7f54c934add4c, type: 3}
-  rocktower1Head: {fileID: 21300000, guid: 67f12a18782154c0ebdc98cb1b9370e7, type: 3}
-  rocktower2Head: {fileID: 21300000, guid: 96123e3f659b9480c8a19ed72b84a382, type: 3}
-  rocktower3Head: {fileID: 21300000, guid: fbdd5da94f601424cb4535a3bb05a1c2, type: 3}
-  rocktower4Head: {fileID: 21300000, guid: c370b81f1385347bbb031a36a9227b42, type: 3}
-  rocktower5Head: {fileID: 21300000, guid: 4a66efcdbf40740deb628d39cc7df1b2, type: 3}
   bullettowerHeadWhite: {fileID: 21300000, guid: 74cb0de570df048e8a9058ba113517de,
     type: 3}
   rocktowerHeadWhite: {fileID: 21300000, guid: 5d8022c61c5c64914bea35e261f3366b, type: 3}

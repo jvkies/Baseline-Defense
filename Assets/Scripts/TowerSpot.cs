@@ -6,6 +6,7 @@ using Pathfinding;
 
 public class TowerSpot : MonoBehaviour {
 
+	private int numberOfMobsOnSpot = 0;			// number of mobs currently collided and so on this spot
 	private SpriteRenderer sr;
 	private Color defaultColor;
 	private GameObject menuCanvas;
@@ -15,6 +16,7 @@ public class TowerSpot : MonoBehaviour {
 	public Transform goalPosition;
 	public GameObject towerInSlot = null;
 	public GameObject tower1;
+
 	public AstarPath astarPath;
 
 	// Use this for initialization
@@ -47,6 +49,14 @@ public class TowerSpot : MonoBehaviour {
 		Debug.Log(gameObject.name);
 	}
 
+	public bool IsTowerSpotClear() {
+		if (numberOfMobsOnSpot == 0)
+			return true;
+		else
+			return false;
+			
+	}
+
 	public bool WouldBlockPath() {
 		
 		// There must be an AstarPath instance in the scene
@@ -54,28 +64,25 @@ public class TowerSpot : MonoBehaviour {
 			Debug.Log ("Error: no AstarPath Object found");
 			return false;				// if there is no AstarPath, nothing would block
 		}
+
+		gameObject.layer = 1;			// objects in this layer block path
+
 		GraphUpdateObject guo = new GraphUpdateObject (gameObject.GetComponent<BoxCollider2D>().bounds);
 		GraphNode spawnPointNode = AstarPath.active.GetNearest (spawnPosition.position).node;
 		GraphNode goalNode = AstarPath.active.GetNearest (goalPosition.position).node;
-		if (GraphUpdateUtilities.UpdateGraphsNoBlock (guo, spawnPointNode, goalNode, false)) {
+
+		if (GraphUpdateUtilities.UpdateGraphsNoBlock (guo, spawnPointNode, goalNode, true)) {
+			gameObject.layer = 0;
 			return false;
+		} else {
+			gameObject.layer = 0;
+			return true;
 		}
-		Debug.Log ("this tower would block");
 
-		return true;
-
-		// We can calculate multiple paths asynchronously
-	//	for (int i = 0; i < 10; i++) {
-			// As there is not Seeker to keep track of the callbacks, we now need to specify the callback every time again
-	//		var p = ABPath.Construct(transform.position, transform.position+transform.forward*i*10, OnPathComplete);
-			// Start the path by calling the AstarPath component directly
-			// AstarPath.active is the active AstarPath instance in the scene
-	//		AstarPath.StartPath (p);
-	//	}
 	}
 
 	private bool PutDragInSlot(GameObject towerInstance) {
-		if (!WouldBlockPath ()) {
+		if (!WouldBlockPath () && IsTowerSpotClear()) {
 			towerInstance.transform.SetParent (gameObject.transform);
 			towerInstance.transform.position = gameObject.transform.position;
 			towerInstance.transform.localScale = new Vector3 (1, 1, 1);
@@ -137,6 +144,24 @@ public class TowerSpot : MonoBehaviour {
 			}	
 		}
 	}
+
+	void OnTriggerEnter2D ( Collider2D other) {
+		if (other.tag == "Mob") {
+			numberOfMobsOnSpot += 1;
+		}
+
+	}
+	void OnTriggerExit2D ( Collider2D other) {
+		if (other.tag == "Mob") {
+			numberOfMobsOnSpot -= 1;
+		}
+
+	}
+
+
+	void OnCollisionEnter2D (Collision2D col) {
+	}
+
 
 	public void OnMouseEnter() {
 		if (GameManager.instance.isDragging == true) {
