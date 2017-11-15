@@ -114,22 +114,18 @@ public class TowerController : MonoBehaviour {
 		bullet.velocity = towerStats.bulletVelocity;
 		bullet.aoeRange = towerStats.aoeRange;
 		bullet.transform.localScale = towerStats.bulletSize;
-		// TODO: store bullet size / type in Tower class
-		//if (towerStats.towerID == "rocktower1" || towerStats.towerID == "rocktower2" || towerStats.towerID == "rocktower3")
-		//	bullet.transform.localScale = new Vector2 (0.15f, 0.15f);
+		bullet.GetComponent<SpriteRenderer> ().color = towerStats.towerColor;
 
 		if (bullet != null)
 			bullet.Seek (target);
 	}
 
 	public void OnMouseOver() {
-		// TODO: BUG: cant select tower, tower doesnt get this OnMouseOver() Event
-		Debug.Log ("onMouseOver: " + gameObject.name);
 		if (Input.GetMouseButtonDown (0)) {
 			if (GameManager.instance.isTowerSelected == true) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
 			}
-			if (GameManager.instance.isDragging != true) {
+			if (GameManager.instance.isDragging != true && !menuCanvas.GetComponent<MenuController>().escapeMenuPanel.activeSelf) {
 				selectTower (true);
 			}
 		}
@@ -164,6 +160,13 @@ public class TowerController : MonoBehaviour {
 		towerSpot.GetComponent<TowerSpot>().towerInSlot = null;
 
 		GameManager.instance.UpdateSouls (towerStats.towerCost * sellMultiplier);
+		AstarPath.active.UpdateGraphs (gameObject.GetComponent<BoxCollider2D> ().bounds);
+
+		// tell every Mob to calculate a new Path
+		for (int mobNumber = 0; mobNumber < enemyContainer.transform.childCount; mobNumber++) {
+			enemyContainer.transform.GetChild (mobNumber).GetComponent<AIPath> ().SearchPath ();
+		}
+
 		Destroy (gameObject);
 	}
 
@@ -175,6 +178,7 @@ public class TowerController : MonoBehaviour {
 			towerStats = GameManager.instance.tower [towerStats.upgradeID];	// updating its stats
 			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats);
 			towerHead.GetComponent<SpriteRenderer> ().sprite = towerStats.towerImageHead;
+			towerHead.GetComponent<SpriteRenderer> ().color = towerStats.towerColor;
 			rangeEffect.transform.localScale = new Vector3 (visualRange(towerStats.towerRange), visualRange(towerStats.towerRange), 1);
 
 		}

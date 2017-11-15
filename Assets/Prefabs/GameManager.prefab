@@ -239,3 +239,6 @@ MonoBehaviour:
   rocktower3Head: {fileID: 21300000, guid: fbdd5da94f601424cb4535a3bb05a1c2, type: 3}
   rocktower4Head: {fileID: 21300000, guid: c370b81f1385347bbb031a36a9227b42, type: 3}
   rocktower5Head: {fileID: 21300000, guid: 4a66efcdbf40740deb628d39cc7df1b2, type: 3}
+  bullettowerHeadWhite: {fileID: 21300000, guid: 74cb0de570df048e8a9058ba113517de,
+    type: 3}
+  rocktowerHeadWhite: {fileID: 21300000, guid: 5d8022c61c5c64914bea35e261f3366b, type: 3}

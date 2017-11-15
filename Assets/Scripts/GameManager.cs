@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour {
 	
 	public static GameManager instance = null;
+	public static bool isOnSceneLoadedCalled;			// prevent function OnSceneLoaded be called twice (http://www.wenyu-wu.com/blogs/unity-when-using-onlevelwasloaded-and-dontdestroyonload-together/)
 
 	private AudioSource musicSource;
 	private AudioSource sfxSource;
@@ -48,13 +49,14 @@ public class GameManager : MonoBehaviour {
 	public Sprite rocktower3Head;
 	public Sprite rocktower4Head;
 	public Sprite rocktower5Head;
+	public Sprite bullettowerHeadWhite;
+	public Sprite rocktowerHeadWhite;
 
 
 	void Awake () {
 		if (instance == null) {
 			instance = this;
-		}
-		else if (instance != this)
+		} else if (instance != this)
 			Destroy (gameObject);
 
 		DontDestroyOnLoad (gameObject);
@@ -63,22 +65,25 @@ public class GameManager : MonoBehaviour {
 		sfxSource = gameObject.GetComponents<AudioSource> ()[1];
 
 		SceneManager.sceneLoaded += OnSceneLoaded; 		// using a delegate here, adding our own function OnSceneLoaded to get event calles from sceneLoaded
+		isOnSceneLoadedCalled = false;
 	}
 		
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		// if we start in the main menu, "MenuCanvas" and "Spawnblock" are not present
-		try {
-			menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController>();
-			towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
-			//spawnblock = GameObject.FindWithTag ("Spawnblock").GetComponent<Spawner>();
+		if (!isOnSceneLoadedCalled) {
+			// if we start in the main menu, "MenuCanvas" and "Spawnblock" are not present
+			try {
+				menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
+				towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
 
-			InitWalls ();
+				InitWalls ();
 
-			//menuScript.UpdateHealth(health.ToString());
-			menuScript.UpdateSouls(souls.ToString());
-		//	menuScript.UpdateMoney(money.ToString());
-		} catch {} 
+				menuScript.UpdateSouls (souls.ToString ());
+
+				isOnSceneLoadedCalled = true;
+			} catch {
+			} 
+		}
 
 	}
 
@@ -117,16 +122,16 @@ public class GameManager : MonoBehaviour {
 
 	private void InitData() {
 		tower = new Dictionary<string, Tower>();
-		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,0,8,new Vector2(0.05f,0.05f),bullettower1Head));
-		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,15,5,2,2,3,0,8,new Vector2(0.05f,0.05f),bullettower2Head));
-		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",30,30,7,3,2.5f,4,0,8,new Vector2(0.05f,0.05f),bullettower3Head));
-		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",60,50,10,4,3,4.5f,0,8,new Vector2(0.05f,0.05f),bullettower4Head));
-		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,110,0,13,5,3.5f,5,0,8,new Vector2(0.05f,0.05f),bullettower5Head));
-		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.5f,4,0.7f,4,new Vector2(0.15f,0.15f),rocktower1Head));
-		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.5f,4.5f,0.8f,4,new Vector2(0.15f,0.15f),rocktower2Head));
-		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.5f,5,0.8f,4,new Vector2(0.15f,0.15f),rocktower3Head));
-		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.5f,5.5f,1,4,new Vector2(0.15f,0.15f),rocktower4Head));
-		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.5f,6,1.2f,4,new Vector2(0.15f,0.15f),rocktower5Head));
+		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,0,8,new Color32(0,0,0,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
+		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,20,5,2,2,3,0,8,new Color32(50,50,220,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
+		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",35,35,7,3,2.5f,4,0,8,new Color32(150,150,50,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
+		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",70,65,10,4,3,4.5f,0,8,new Color32(255,20,20,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
+		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,135,0,13,5,3.5f,5,0,8,new Color32(220,220,50,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
+		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.5f,4,0.7f,4,new Color32(0,0,0,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.5f,4.5f,0.8f,4,new Color32(50,50,220,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.5f,5,0.8f,4,new Color32(150,150,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.5f,5.5f,1,4,new Color32(255,20,20,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.5f,6,1.2f,4,new Color32(220,220,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
 
 		mobs = new Dictionary<string, Mob>();
 		mobs.Add("blob",new Mob("blob","Blob",1,1,10,10,0,1,blob));
@@ -138,7 +143,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void InitWalls() {
-		Debug.Log ("using tower coverage: " + wallPercent.ToString());
+		//Debug.Log ("using tower coverage: " + wallPercent.ToString());
 		for (int i = 0; i < towerSpots.childCount; i++) {
 			if (Random.Range (0, 100) < wallPercent) {	// 
 				GameObject wallInstance = Instantiate(wallPrefab,towerSpots.GetChild (i).position,Quaternion.identity);

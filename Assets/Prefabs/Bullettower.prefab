@@ -201,6 +201,7 @@ MonoBehaviour:
   rotateSpeed: 10
   sellMultiplier: 0.5
   target: {fileID: 0}
+  towerSpot: {fileID: 0}
   towerHead: {fileID: 1999150731562430}
   bulletPrefab: {fileID: 1336005061427644, guid: ea12d0c2356124dc8a1c6ab4b1988cb6,
     type: 2}
@@ -241,8 +242,8 @@ SpriteRenderer:
   m_SortingLayerID: -653165981
   m_SortingLayer: 3
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 50dcef186af06494094649c8c8b15e67, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 74cb0de570df048e8a9058ba113517de, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Pathfinding;
 
 public class TowerSpot : MonoBehaviour {
 
@@ -10,6 +11,8 @@ public class TowerSpot : MonoBehaviour {
 	private GameObject menuCanvas;
 	private Transform enemyContainer;
 
+	public Transform spawnPosition;
+	public Transform goalPosition;
 	public GameObject towerInSlot = null;
 	public GameObject tower1;
 	public AstarPath astarPath;
@@ -45,10 +48,21 @@ public class TowerSpot : MonoBehaviour {
 	}
 
 	public bool WouldBlockPath() {
-		// TODO: implement WouldBlockPath
+		
 		// There must be an AstarPath instance in the scene
-		if (AstarPath.active == null) return false;			// if there is no AstarPath, nothing would block
-		return false;
+		if (AstarPath.active == null) {
+			Debug.Log ("Error: no AstarPath Object found");
+			return false;				// if there is no AstarPath, nothing would block
+		}
+		GraphUpdateObject guo = new GraphUpdateObject (gameObject.GetComponent<BoxCollider2D>().bounds);
+		GraphNode spawnPointNode = AstarPath.active.GetNearest (spawnPosition.position).node;
+		GraphNode goalNode = AstarPath.active.GetNearest (goalPosition.position).node;
+		if (GraphUpdateUtilities.UpdateGraphsNoBlock (guo, spawnPointNode, goalNode, false)) {
+			return false;
+		}
+		Debug.Log ("this tower would block");
+
+		return true;
 
 		// We can calculate multiple paths asynchronously
 	//	for (int i = 0; i < 10; i++) {
@@ -60,8 +74,7 @@ public class TowerSpot : MonoBehaviour {
 	//	}
 	}
 
-	private void PutDragInSlot(GameObject towerInstance) {
-		// TODO: implement WouldBlockPath()
+	private bool PutDragInSlot(GameObject towerInstance) {
 		if (!WouldBlockPath ()) {
 			towerInstance.transform.SetParent (gameObject.transform);
 			towerInstance.transform.position = gameObject.transform.position;
@@ -88,7 +101,10 @@ public class TowerSpot : MonoBehaviour {
 
 			//GameManager.instance.money -= towerInstance.GetComponent<TowerController> ().towerStats.towerCost;
 			GameManager.instance.UpdateSouls (-towerInstance.GetComponent<TowerController> ().towerStats.towerCost);
+
+			return true;
 		}
+		return false;
 	}
 
 	public void OnMouseOver() {
@@ -100,18 +116,18 @@ public class TowerSpot : MonoBehaviour {
 		if (GameManager.instance.isDragging == true) {
 			if (Input.GetMouseButtonDown (0) && towerInSlot == null) {
 
-				PutDragInSlot (GameManager.instance.draggedTower);
+				if (PutDragInSlot (GameManager.instance.draggedTower)) {
 
-				if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {
-					if (GameManager.instance.souls > GameManager.instance.draggedTower.GetComponent<TowerController> ().towerStats.towerCost) {
-						menuCanvas.GetComponent<MenuController>().InstantiateTower(GameManager.instance.draggedTower.GetComponent<TowerController>().towerStats.towerID);
+					if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {
+						if (GameManager.instance.souls > GameManager.instance.draggedTower.GetComponent<TowerController> ().towerStats.towerCost) {
+							menuCanvas.GetComponent<MenuController> ().InstantiateTower (GameManager.instance.draggedTower.GetComponent<TowerController> ().towerStats.towerID);
+						} else {
+							GameManager.instance.isDragging = false;
+						}
 					} else {
 						GameManager.instance.isDragging = false;
 					}
-				} else {
-					GameManager.instance.isDragging = false;
 				}
-
 						
 			}
 		

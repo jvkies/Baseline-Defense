@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour {
 
+	private int tipIndex = 0;
 	private GameObject towerToInstantiate;
 		
 	public Text souls;
@@ -28,6 +29,13 @@ public class MenuController : MonoBehaviour {
 	public Text rangeValue;
 	public Text costValue;
 	public GameObject startWaveContainer;
+	public Text tipText;
+
+	private string[] tipArray = {
+		"Tip: Hold down shift to place multiple towers.",
+		"Tip: Did you figure out the spawning pattern yet?",
+		"Tip: Always brush your teeth before going to bed.",
+	};
 
 	void Update () {
 		if (GameManager.instance.isDragging) {
@@ -131,9 +139,19 @@ public class MenuController : MonoBehaviour {
 
 	public void ToggleEscapeMenu() {
 		if (escapeMenuPanel.activeSelf) {
+			// close escape menu
 			escapeMenuPanel.SetActive (false);
 			Time.timeScale = 1;
 		} else {
+			// open escape menu
+
+			tipText.text = tipArray [tipIndex];
+			tipIndex += 1;
+			if (tipIndex >= tipArray.Length)
+				tipIndex = 0;
+
+			if (GameManager.instance.isTowerSelected)
+				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
 			escapeMenuPanel.SetActive (true);
 			Time.timeScale = 0;
 		}
