@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class MenuController : MonoBehaviour {
 
@@ -132,7 +134,7 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void DisplayLoose() {
-		waveDisplayer.GetComponent<Text> ().text = "You Lost!"; 
+		waveDisplayer.GetComponent<Text> ().text = "Defeat"; 
 		waveDisplayer.GetComponent<Text> ().color = new Color32 (255, 110, 110, 255); 
 		waveDisplayer.SetActive (true);
 	}
@@ -155,6 +157,11 @@ public class MenuController : MonoBehaviour {
 			escapeMenuPanel.SetActive (true);
 			Time.timeScale = 0;
 		}
+	}
+
+	public void Retry() {
+		ToggleEscapeMenu ();
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 
 	public void ExitApplication() {

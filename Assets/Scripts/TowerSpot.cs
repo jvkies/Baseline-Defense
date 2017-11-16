@@ -35,20 +35,6 @@ public class TowerSpot : MonoBehaviour {
 		
 	}
 		
-	public void test (PointerEventData eventData) {
-		// 		if (eventData.button.ToString() == "Left") {
-		if (GameManager.instance.isDragging == true) {
-
-			Debug.Log (eventData);
-			GameManager.instance.isDragging = false;
-			//InventoryManager.PutDragInSlot(slotName);
-
-
-		}
-		Debug.Log (eventData);
-		Debug.Log(gameObject.name);
-	}
-
 	public bool IsTowerSpotClear() {
 		if (numberOfMobsOnSpot == 0)
 			return true;

@@ -104,8 +104,7 @@ public class Spawner : MonoBehaviour {
 		menuCanvas.waveDisplayer.SetActive(false);
 
 		if (mobID == "groupblob") {
-			// TODO: this works, but no aoe tower yet
-			waitBetweenMobs = 0;
+			waitBetweenMobs = 0.07f;
 			spawnPos = GetRandomSpawnSpot ().position;
 		} else {
 			waitBetweenMobs = 0.3f;
@@ -134,7 +133,6 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public Mob ScaleMob(Mob _mob, int waveID) {
-		// TODO: add additional to the linear component (+6hp every round) a percantage base of the total hp
 		_mob.health += _mob.health * healthScaleFactor * (waveID-1);
 		_mob.maxHealth += _mob.maxHealth * healthScaleFactor * (waveID-1);
 		_mob.moneyWorth += Mathf.FloorToInt( _mob.moneyWorth * 0.1f * waveID );
@@ -145,20 +143,20 @@ public class Spawner : MonoBehaviour {
 			_mob.maxHealth += _mob.maxHealth * 0.5f;
 		}
 		if (waveID > 20) {
-			_mob.health += _mob.health * 0.5f;
-			_mob.maxHealth += _mob.maxHealth * 0.5f;
+			_mob.health += _mob.health * 0.6f;
+			_mob.maxHealth += _mob.maxHealth * 0.6f;
 		}
 		if (waveID > 30) {
-			_mob.health += _mob.health * 0.5f;
-			_mob.maxHealth += _mob.maxHealth * 0.5f;
+			_mob.health += _mob.health * 0.7f;
+			_mob.maxHealth += _mob.maxHealth * 0.7f;
 		}
 		if (waveID > 40) {
-			_mob.health += _mob.health * 0.5f;
-			_mob.maxHealth += _mob.maxHealth * 0.5f;
+			_mob.health += _mob.health * 0.8f;
+			_mob.maxHealth += _mob.maxHealth * 0.8f;
 		}
 		if (waveID > 50) {
-			_mob.health += _mob.health * 0.5f;
-			_mob.maxHealth += _mob.maxHealth * 0.5f;
+			_mob.health += _mob.health * 0.9f;
+			_mob.maxHealth += _mob.maxHealth * 0.9f;
 		}
 
 		return _mob;

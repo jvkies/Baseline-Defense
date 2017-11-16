@@ -133,7 +133,7 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public void selectTower( bool active) {
-		if (active == true) {
+		if (active == true && !GameManager.instance.isGameLost) {
 			GameManager.instance.isTowerSelected = true;
 			GameManager.instance.selectedTower = gameObject;
 

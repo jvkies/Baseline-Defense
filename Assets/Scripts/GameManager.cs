@@ -19,9 +19,7 @@ public class GameManager : MonoBehaviour {
 	//private Spawner spawnblock;
 	//private UnityEngine.Object[] MusicClips;			// Music disabled due to long load times
 
-	//public int health = 10;
-	public float souls = 61;
-//	public float money = 25;
+	public float souls = 71;
 	public int wallPercent = 7;
 	public bool isDragging = false;
 	public bool isTowerSelected = false;
@@ -66,9 +64,7 @@ public class GameManager : MonoBehaviour {
 				menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 				towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
 
-				InitWalls ();
-
-				menuScript.UpdateSouls (souls.ToString ());
+				InitNewGame();
 
 				isOnSceneLoadedCalled = true;
 			} catch {
@@ -81,7 +77,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		// InitMusic ();  								// this works, but music files are too large for github, skipping
 
-		InitData ();
+		InitTowerAndMobData ();
 	}
 		
 	void Update() {
@@ -94,11 +90,11 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 		if (Input.GetKeyDown (KeyCode.P)) {
+			StopDragging ();
 			menuScript.ToggleEscapeMenu();
 		}
 		if (Input.GetMouseButtonDown (1) && isDragging) {
-			isDragging = false;
-			Destroy (draggedTower);
+			StopDragging ();
 		}	
 		if (Input.GetKeyDown (KeyCode.Alpha1)) {
 			menuScript.BuildTower ("bullettower1");
@@ -110,18 +106,28 @@ public class GameManager : MonoBehaviour {
 			
 	}
 
-	private void InitData() {
+	private void InitNewGame() {
+		InitWalls ();
+
+		isGameLost = false;
+		isDragging = false;
+		souls = 71;
+
+		menuScript.UpdateSouls (souls.ToString ());
+	}
+
+	private void InitTowerAndMobData() {
 		tower = new Dictionary<string, Tower>();
 		tower.Add("bullettower1",new Tower("bullettower1","Bullet Tower 1","bullettower2",5,10,3,1,1,2,0,8,new Color32(0,0,0,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
 		tower.Add("bullettower2",new Tower("bullettower2","Bullet Tower 2","bullettower3",15,20,5,2,2,3,0,8,new Color32(50,50,220,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
 		tower.Add("bullettower3",new Tower("bullettower3","Bullet Tower 3","bullettower4",35,35,7,3,2.5f,4,0,8,new Color32(150,150,50,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
 		tower.Add("bullettower4",new Tower("bullettower4","Bullet Tower 4","bullettower5",70,65,10,4,3,4.5f,0,8,new Color32(255,20,20,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
 		tower.Add("bullettower5",new Tower("bullettower5","Bullet Tower 5",null,135,0,13,5,3.5f,5,0,8,new Color32(220,220,50,255),new Vector2(0.05f,0.05f),bullettowerHeadWhite));
-		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.5f,4,0.7f,4,new Color32(0,0,0,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
-		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.5f,4.5f,0.8f,4,new Color32(50,50,220,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
-		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.5f,5,0.8f,4,new Color32(150,150,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
-		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.5f,5.5f,1,4,new Color32(255,20,20,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
-		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.5f,6,1.2f,4,new Color32(220,220,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower1",new Tower("rocktower1","Rock Tower 1","rocktower2",10,25,10,1,0.4f,4,0.7f,4,new Color32(0,0,0,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower2",new Tower("rocktower2","Rock Tower 2","rocktower3",35,50,15,2,0.4f,4.5f,0.8f,4,new Color32(50,50,220,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower3",new Tower("rocktower3","Rock Tower 3","rocktower4",85,80,20,3,0.4f,5,0.8f,4,new Color32(150,150,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower4",new Tower("rocktower4","Rock Tower 4","rocktower5",165,110,30,4,0.4f,5.5f,1,4,new Color32(255,20,20,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
+		tower.Add("rocktower5",new Tower("rocktower5","Rock Tower 5",null,275,0,40,5,0.4f,6,1.2f,4,new Color32(220,220,50,255),new Vector2(0.15f,0.15f),rocktowerHeadWhite));
 
 		mobs = new Dictionary<string, Mob>();
 		mobs.Add("blob",new Mob("blob","Blob",1,1,10,10,0,1,blob));
@@ -145,6 +151,13 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	public void StopDragging() {
+		if (isDragging) {
+			isDragging = false;
+			Destroy (draggedTower);
+		}
+	}
+
 	public void LoadScene(string sceneName) {
 		Time.timeScale = 1;
 		SceneManager.LoadScene (sceneName);
@@ -155,15 +168,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void MainMenuScene() {
-		ResetPlayerdata ();
+		//ResetPlayerdata ();
 		LoadScene ("MainMenu");
 	}		
 		
 	public void ResetPlayerdata() {
-		// TODO: defined starting amount
-		souls = 61;
-		//health = 10;
-		//money = 25;
+		souls = 71;
 	}
 
 	public void UpdateSouls(float amount) {
@@ -179,16 +189,10 @@ public class GameManager : MonoBehaviour {
 		menuScript.UpdateSouls (souls.ToString());
 
 	}
-
-	// TODO: deprecated
-//	public void UpdateMoney(float changeAmount=0) {
-//		money += changeAmount;
-//		menuScript.UpdateMoney (money.ToString());
-//	}
-
+		
 	private void InitMusic() {
 		try {
-			// WORKS BUT TAKES TO LONG
+			// WORKS BUT TAKES TO LONG TO LOAD
 			//MusicClips = Resources.LoadAll(musicFolder, typeof(AudioClip)); 
 
 			//if (MusicClips.Length == 0) {
