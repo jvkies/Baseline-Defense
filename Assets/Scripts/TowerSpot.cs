@@ -74,6 +74,7 @@ public class TowerSpot : MonoBehaviour {
 			towerInstance.transform.localScale = new Vector3 (1, 1, 1);
 			towerInstance.GetComponent<SpriteRenderer> ().sortingLayerName = "Objects";
 			towerInstance.GetComponentsInChildren<SpriteRenderer> () [1].sortingLayerName = "Objects";
+			towerInstance.GetComponentsInChildren<SpriteRenderer> () [2].sortingLayerName = "Objects";
 			towerInstance.GetComponent<SpriteRenderer> ().sortingOrder -= 2;
 			towerInstance.GetComponentsInChildren<SpriteRenderer> () [1].sortingOrder -= 2;
 			towerInstance.GetComponent<TowerController> ().ActivateTower ();
@@ -102,13 +103,13 @@ public class TowerSpot : MonoBehaviour {
 
 	public void OnMouseOver() {
 		if (GameManager.instance.isTowerSelected == true) {
-			if (Input.GetMouseButtonDown (0)) {
+			if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
 			}
 		}
 		if (GameManager.instance.isDragging == true) {
-			if (Input.GetMouseButtonDown (0) && towerInSlot == null) {
-
+			
+			if (Input.GetMouseButtonDown (0) && towerInSlot == null && !EventSystem.current.IsPointerOverGameObject ()) {
 				if (PutDragInSlot (GameManager.instance.draggedTower)) {
 
 					if (Input.GetKey (KeyCode.LeftShift) || Input.GetKeyDown (KeyCode.RightShift)) {

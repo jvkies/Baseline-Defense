@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class TowerController : MonoBehaviour {
 
@@ -55,7 +56,7 @@ public class TowerController : MonoBehaviour {
 
 		fireCountdown -= Time.deltaTime;
 
-		if (Input.GetMouseButtonDown (1) && GameManager.instance.isDragging == false) {
+		if (Input.GetMouseButtonDown (1) && GameManager.instance.isDragging == false ) {
 			selectTower (false);
 		}
 
@@ -121,7 +122,9 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public void OnMouseOver() {
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
+	
+
 			if (GameManager.instance.isTowerSelected == true) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
 			}
@@ -154,6 +157,7 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public void SellTower() {
+		Debug.Log ("selling tower");
 		selectTower (false);
 		//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
 		towerSpot.GetComponent<BoxCollider2D> ().enabled = true;

@@ -78,6 +78,7 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void SellTower() {
+		Debug.Log ("Menu Controller sell tower");
 		if (GameManager.instance.isTowerSelected) {
 			GameManager.instance.selectedTower.GetComponent<TowerController> ().SellTower ();
 		}

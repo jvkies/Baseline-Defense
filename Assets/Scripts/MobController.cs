@@ -6,38 +6,27 @@ using UnityEngine.UI;
 public class MobController : MonoBehaviour {
 
 	private Rigidbody2D mobRb2D;
-//	private GameObject waypointContainer;
 	private Transform towerspotContainer;
-	//private Queue<Vector3> waypoints;
-//	private Vector3 nextWaypoint;
 	private GameObject healthBarInstance;
+	private GameObject yellowCrystal;
+	private GameObject healthbarContainer;
 
 	public Mob mobData;
-//	public Image HealthBar;
 	public GameObject healthBarPrefab;
-	private GameObject healthbarContainer;
+	public GameObject soul;
+
 
 	// Use this for initialization
 	void Start () {
 		healthbarContainer = GameObject.FindWithTag("HealthbarContainer");
+		yellowCrystal = GameObject.FindWithTag("YellowCrystal");
 
 		healthBarInstance = Instantiate (healthBarPrefab, gameObject.transform.position, Quaternion.identity);
 		healthBarInstance.transform.SetParent (healthbarContainer.transform, false);
 		healthBarInstance.GetComponent<RectTransform>().localScale = new Vector3(0.3f,0.5f,1);
 
-//		mobData = GameManager.instance.mobs ["blob1"].Copy ();
-
-	//	waypointContainer = GameObject.FindWithTag("WaypointContainer");
 		mobRb2D = GetComponent<Rigidbody2D> ();
 
-	//	waypoints = new Queue<Vector3> ();
-	//	waypoints.Clear ();
-
-	//	foreach (Transform t in waypointContainer.GetComponentInChildren<Transform>()) {
-	//		waypoints.Enqueue (t.position);
-	//	}
-
-	//	nextWaypoint = waypoints.Dequeue ();
 	}
 	
 	// Update is called once per frame
@@ -65,6 +54,10 @@ public class MobController : MonoBehaviour {
 		if (mobData.health <= 0) {
 			//GameManager.instance.money += mobData.moneyWorth;
 			GameManager.instance.UpdateSouls (mobData.moneyWorth);
+
+			//GameObject soulGO = Instantiate (soul, gameObject.transform.position, Quaternion.identity);
+			//soulGO.transform.SetParent (yellowCrystal.transform);
+
 			Destroy (healthBarInstance);
 			Destroy (gameObject);
 		}

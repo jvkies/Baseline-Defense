@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8dc317259e2d479280aafdb66a41ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  souls: 71
+  souls: 141
   wallPercent: 5
   isDragging: 0
   isTowerSelected: 0

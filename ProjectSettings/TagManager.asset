@@ -14,6 +14,7 @@ TagManager:
   - TowerSpotContainer
   - Mob
   - TowerSpot
+  - YellowCrystal
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - SoulEffector
   - 
   - 
   - 

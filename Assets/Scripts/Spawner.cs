@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour {
 	private Image buttonEffectImage;
 
 	public int maxWaveAmount = 100;				// maximum numbers of waves
-	public float healthScaleFactor = 0.6f;		// scale factor the health of the mobs increase per wave
+	public float healthScaleFactor = 0.3f;		// scale factor the health of the mobs increase per wave
 	public Color32 highlightColor = new Color32 (255, 255, 0, 255);
 	public Color32 standardColor = new Color32 (216, 18, 15, 255);
 	public Dictionary<int, Wave> waves;
@@ -119,8 +119,13 @@ public class Spawner : MonoBehaviour {
 		while (enemyContainer.transform.childCount != 0) {
 			yield return new WaitForSeconds(1);
 		}
-
+			
 		if (GameManager.instance.isGameLost == false) {
+
+			// Give money to player after survival
+			if (waveCount != 1)
+				GameManager.instance.UpdateSouls (Mathf.Ceil(10+waveCount-1));
+			
 			if (waveID != maxWaveAmount) {
 				startWaveContainer.SetActive (true);
 			} else {
@@ -135,7 +140,7 @@ public class Spawner : MonoBehaviour {
 	public Mob ScaleMob(Mob _mob, int waveID) {
 		_mob.health += _mob.health * healthScaleFactor * (waveID-1);
 		_mob.maxHealth += _mob.maxHealth * healthScaleFactor * (waveID-1);
-		_mob.moneyWorth += Mathf.FloorToInt( _mob.moneyWorth * 0.1f * waveID );
+	//	_mob.moneyWorth += Mathf.FloorToInt( _mob.moneyWorth * 0.1f * waveID );
 		_mob.mobHeartDamage += Mathf.FloorToInt( _mob.mobHeartDamage * 0.1f * waveID );
 
 		if (waveID > 10) {
@@ -155,8 +160,8 @@ public class Spawner : MonoBehaviour {
 			_mob.maxHealth += _mob.maxHealth * 0.8f;
 		}
 		if (waveID > 50) {
-			_mob.health += _mob.health * 0.9f;
-			_mob.maxHealth += _mob.maxHealth * 0.9f;
+			_mob.health += _mob.health * 0.8f;
+			_mob.maxHealth += _mob.maxHealth * 0.8f;
 		}
 
 		return _mob;
@@ -195,8 +200,6 @@ public class Spawner : MonoBehaviour {
 
 	public void NextWave() {
 		waveCount += 1;
-		//if (waveCount != 1)
-		//	GameManager.instance.UpdateSouls (Mathf.Ceil(GameManager.instance.souls/2f));
 
 		startWaveContainer.SetActive (false);
 		StartCoroutine(StartWave(waveCount));

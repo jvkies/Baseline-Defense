@@ -192,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBarPrefab: {fileID: 1402939198065474, guid: 7f8fc1af015594fd8ba961d0e0d0f332,
     type: 2}
+  soul: {fileID: 1465413052787852, guid: 73ba100a5655748f1a4c97ab9ca8ba54, type: 2}
 --- !u!212 &212648863451974074
 SpriteRenderer:
   m_ObjectHideFlags: 1
