@@ -75,7 +75,7 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public float visualRange(float towerRangeStat) {		// converts the towerRangeStat e.g. 2 to the visual range of the rangeEffect
-		return towerRangeStat*2+1;
+		return (towerRangeStat*2+1)/5;
 	}
 
 	public float actualRange(float towerRangeStat) {		// converts the towerRangeStat to the correct distance on the map the tower can shoot at

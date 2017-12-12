@@ -48,7 +48,15 @@ public class MobController : MonoBehaviour {
 	}
 
 	public void TakeDamage(float amount) {
+
+		if ((amount - mobData.armor) < 0) {
+			amount = 0;
+		} else {
+			amount = amount - mobData.armor;
+		}
+		
 		mobData.health -= amount;
+
 		healthBarInstance.GetComponentsInChildren<Image>()[1].fillAmount = mobData.health / mobData.maxHealth ;
 
 		if (mobData.health <= 0) {

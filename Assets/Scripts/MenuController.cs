@@ -32,6 +32,7 @@ public class MenuController : MonoBehaviour {
 	public Text costValue;
 	public GameObject startWaveContainer;
 	public Text tipText;
+	public Text waveButtonText;
 
 	private string[] tipArray = {
 		"Tip: Hold down shift to place multiple towers.",
@@ -158,6 +159,10 @@ public class MenuController : MonoBehaviour {
 			escapeMenuPanel.SetActive (true);
 			Time.timeScale = 0;
 		}
+	}
+
+	public void SetWaveButtonText(string text) {
+		waveButtonText.text = text;
 	}
 
 	public void Retry() {
