@@ -157,7 +157,6 @@ public class TowerController : MonoBehaviour {
 	}
 
 	public void SellTower() {
-		Debug.Log ("selling tower");
 		selectTower (false);
 		//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
 		towerSpot.GetComponent<BoxCollider2D> ().enabled = true;

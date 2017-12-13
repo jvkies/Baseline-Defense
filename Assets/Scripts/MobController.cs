@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class MobController : MonoBehaviour {
 
+	private bool isDefeated = false;
 	private Rigidbody2D mobRb2D;
 	private Transform towerspotContainer;
 	private GameObject healthBarInstance;
 	private GameObject healthbarContainer;
+	private Spawner spawnScript;
 
 	public Mob mobData;
 	public GameObject healthBarPrefab;
@@ -18,13 +20,13 @@ public class MobController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		healthbarContainer = GameObject.FindWithTag("HealthbarContainer");
+		spawnScript = GameObject.FindWithTag("Spawnblock").GetComponent<Spawner>();
 
 		healthBarInstance = Instantiate (healthBarPrefab, gameObject.transform.position, Quaternion.identity);
 		healthBarInstance.transform.SetParent (healthbarContainer.transform, false);
 		healthBarInstance.GetComponent<RectTransform>().localScale = new Vector3(0.3f,0.5f,1);
 
 		mobRb2D = GetComponent<Rigidbody2D> ();
-
 	}
 	
 	// Update is called once per frame
@@ -57,14 +59,27 @@ public class MobController : MonoBehaviour {
 
 		healthBarInstance.GetComponentsInChildren<Image>()[1].fillAmount = mobData.health / mobData.maxHealth ;
 
-		if (mobData.health <= 0) {
-			//GameManager.instance.money += mobData.moneyWorth;
-			GameManager.instance.UpdateSouls (mobData.moneyWorth);
+		if (mobData.health <= 0 && !isDefeated) {
+			// the mob has been killed
 
-			GameManager.instance.highscore["mobs"] += 1;
+			isDefeated = true;		// the TakeDamage function may be called while the mob already has < 0 hp
+
+			GameManager.instance.UpdateSouls (mobData.moneyWorth);
+			if (!GameManager.instance.isGameLost)
+				GameManager.instance.highscore ["mobs"] += 1;
 
 			//GameObject soulGO = Instantiate (soul, gameObject.transform.position, Quaternion.identity);
 			//soulGO.transform.SetParent (yellowCrystal.transform);
+
+			// remove this mob from the waveMob Dict
+			spawnScript.waveMob [mobData.waveID].Remove(gameObject);
+
+			// if the last mob was removed, remove the wave from waveMob Dict
+			if (spawnScript.waveMob [mobData.waveID].Count == 0) {
+				Debug.Log("wave "+mobData.waveID+" clear");
+				GameManager.instance.highscore["wave"] = mobData.waveID;
+				spawnScript.waveMob.Remove (mobData.waveID);
+			}
 
 			Destroy (healthBarInstance);
 			Destroy (gameObject);

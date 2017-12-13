@@ -220,6 +220,7 @@ MonoBehaviour:
   isGameLost: 0
   musicFolder: music by neocrey
   startGameTime: 0
+  waveID: 0
   draggedTower: {fileID: 0}
   selectedTower: {fileID: 0}
   musicClipsPreload: []
@@ -231,7 +232,7 @@ MonoBehaviour:
   blobBoss: {fileID: 1395960154840638, guid: 2b85c5616edf6476ebe606464043a213, type: 2}
   fastBoss: {fileID: 1395960154840638, guid: 37825fba9d4664006b793706f1af2d15, type: 2}
   airBoss: {fileID: 1395960154840638, guid: b7d59582a3481459093acd2dd06e417c, type: 2}
-  armorBoss: {fileID: 0}
+  armorBoss: {fileID: 1395960154840638, guid: 8f608045cf97047a1ae91d627db9325d, type: 2}
   bullettowerHeadWhite: {fileID: 21300000, guid: 74cb0de570df048e8a9058ba113517de,
     type: 3}
   rocktowerHeadWhite: {fileID: 21300000, guid: 5d8022c61c5c64914bea35e261f3366b, type: 3}

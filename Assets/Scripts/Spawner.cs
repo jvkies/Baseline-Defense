@@ -15,9 +15,9 @@ public class Spawner : MonoBehaviour {
 	private GameObject enemyContainer;
 	private MenuController menuController;
 	private Image buttonEffectImage;
-	private Dictionary<int, List<GameObject>> waveMob;
 
-	public int maxWaveAmount = 100;				// maximum numbers of waves
+	public int maxWaveAmount = 50;				// maximum number of waves until you win
+	public int maxSimulWaves = 5;				// maximum number of waves which can be called early
 	public float healthScaleFactor = 0.3f;		// scale factor the health of the mobs increase per wave
 	public Color32 highlightColor = new Color32 (255, 255, 0, 255);
 	public Color32 standardColor = new Color32 (216, 18, 15, 255);
@@ -25,6 +25,8 @@ public class Spawner : MonoBehaviour {
 	public GameObject buttonEffect;
 	public GameObject startWaveContainer;
 	public AnimationCurve colorCurve;
+	public Dictionary<int, List<GameObject>> waveMob;
+	//public Dictionary<int, int> waveMob;
 
 	// Use this for initialization
 	void Start () {
@@ -57,7 +59,7 @@ public class Spawner : MonoBehaviour {
 		buttonEffectImage.color = Color.Lerp (standardColor, highlightColor, colorCurve.Evaluate (deltaSum));
 		deltaSum += Time.deltaTime;
 
-		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf) {
+		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf && waveMob.Count <= maxSimulWaves) {
 			// TODO: only if the next wave should be able to be called..
 			NextWave ();
 		}
@@ -89,7 +91,7 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public int MobsPerWave(int _waveID, string _mobID) {
-		if (_mobID == "blobboss" || _mobID == "armorboss" || _mobID == "airboss")
+		if (_mobID == "blobboss" || _mobID == "armorboss" || _mobID == "fastboss")
 			return 1;
 		else
 			return 15 + _waveID;
@@ -117,9 +119,13 @@ public class Spawner : MonoBehaviour {
 			mobPerWave -= 1;
 		}
 
-		while (enemyContainer.transform.childCount != 0) {
+		while (waveMob.ContainsKey(waveID) && waveMob[waveID].Count != 0) {
+		//while (enemyContainer.transform.childCount != 0) {
 			yield return new WaitForSeconds(1);
-			//Debug.Log ("mobs in wave: " + waveID + " " + waveMob [waveID].Count);
+		//	if (waveMob.ContainsKey(waveID))
+		//		Debug.Log ("mobs in wave: " + waveID + " " + waveMob [waveID].Count + " (total waves: "+waveMob.Count.ToString()+")");
+		//	else
+		//		Debug.Log("wave "+waveID+" cleared");
 		}
 			
 			
@@ -129,14 +135,13 @@ public class Spawner : MonoBehaviour {
 			if (GameManager.instance.waveID != 1)
 				GameManager.instance.UpdateSouls (Mathf.Ceil(10+GameManager.instance.waveID-1));
 			
-			if (waveID != maxWaveAmount) {
-				startWaveContainer.SetActive (true);
-			} else {
+			if (waveID == maxWaveAmount) {
+				startWaveContainer.SetActive (false);
+		//	} else {
 				if (GameManager.instance.isGameLost != true) {
 					// Player wins the game
 
 					GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
-					GameManager.instance.highscore["wave"] = waveID;
 
 					menuController.DisplayWin ();
 					menuController.DisplayEndGamePanel ();
@@ -173,8 +178,8 @@ public class Spawner : MonoBehaviour {
 		if (waveID > 40) {
 			if (_mob.armor != 0)
 				_mob.armor += 1;
-			_mob.health += _mob.health * 0.6f;
-			_mob.maxHealth += _mob.maxHealth * 0.6f;
+			_mob.health += _mob.health * 0.3f;
+			_mob.maxHealth += _mob.maxHealth * 0.3f;
 		}
 		if (waveID > 50) {
 			if (_mob.armor != 0)
@@ -197,18 +202,20 @@ public class Spawner : MonoBehaviour {
 		//spawnPos = GetRandomSpawnSpot ().position;
 
 		GameObject mob = Instantiate (GameManager.instance.mobs[mobID].mobPrefab, spawnPos, Quaternion.identity);
-		waveMob [waveID].Add (mob); 
+		waveMob [waveID].Add(mob); 
 
 		mob.GetComponent<MobController> ().mobData = ScaleMob(GameManager.instance.mobs [mobID].Copy(),waveID);
+		mob.GetComponent<MobController> ().mobData.waveID = waveID;
+
 		if (waveID > 10)
 			mob.GetComponent<SpriteRenderer> ().color = new Color32 (200, 50, 50,255);
 		if (waveID > 20)
 			mob.GetComponent<SpriteRenderer> ().color = new Color32 (82, 138, 255,255);
 		if (waveID > 30)
 			mob.GetComponent<SpriteRenderer> ().color = new Color32 (50, 200, 50,255);
-		if (waveID > 30)
-			mob.GetComponent<SpriteRenderer> ().color = new Color32 (0, 200, 200,255);
 		if (waveID > 40)
+			mob.GetComponent<SpriteRenderer> ().color = new Color32 (0, 200, 200,255);
+		if (waveID > 50)
 			mob.GetComponent<SpriteRenderer> ().color = new Color32 (200, 50, 200,255);
 		
 		if (enemyContainer != null) {
@@ -218,20 +225,21 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public void NextWave() {
+		if (waveMob.Count <= maxSimulWaves) {
+			if (GameManager.instance.waveID == 0)
+				GameManager.instance.startGameTime = Time.time;
 
-		if (GameManager.instance.waveID == 0)
-			GameManager.instance.startGameTime = Time.time;
+			GameManager.instance.waveID += 1;
 
-		GameManager.instance.waveID += 1;
+			int _waveID = GameManager.instance.waveID;
 
-		int _waveID = GameManager.instance.waveID;
+			waveMob.Add (_waveID, new List<GameObject> ());
 
-		waveMob.Add (_waveID, new List<GameObject>());
+			menuController.SetWaveButtonText ("Start Wave " + (_waveID + 1).ToString ());
 
-		menuController.SetWaveButtonText ("Start Wave "+(_waveID+1).ToString());
-
-		startWaveContainer.SetActive (false);
-		StartCoroutine(StartWave(_waveID));
+			//startWaveContainer.SetActive (false);
+			StartCoroutine (StartWave (_waveID));
+		}
 
 	}
 }

@@ -144,12 +144,12 @@ public class GameManager : MonoBehaviour {
 		tower.Add ("rocktower5", new Tower ("rocktower5", "Rock Tower 5", null, 		261,   0, 120, 5, 0.333f, 5,    1f, 4, new Color32 (220, 220, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
 
 		mobs = new Dictionary<string, Mob>();
-		mobs.Add ("blob", 		new Mob ("blob", "Blob", 			 	 	 1,     1,  10,  10, 0, 0, 1, blob));
-		mobs.Add ("fastblob",	new Mob ("fastblob", "Fast Blob", 	 	 	 1,  1.5f,   8,   8, 0, 0, 1, fastBlob));
-		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	 1, 0.75f,   8,   8, 1, 0, 1, armorBlob));
-		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			20, 0.75f, 130, 130, 0, 0, 5, blobBoss));
-		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	20, 1.25f, 140, 140, 0, 0, 5, fastBoss));
-		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	20, 0.75f, 120, 120, 5, 0, 5, armorBoss));
+		mobs.Add ("blob", 		new Mob ("blob", "Blob", 			 	 	0,  1,     1,  10,  10, 0, 0, 1, blob));
+		mobs.Add ("fastblob",	new Mob ("fastblob", "Fast Blob", 	 	 	0,  1,  1.5f,   8,   8, 0, 0, 1, fastBlob));
+		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	0,  1, 0.75f,   8,   8, 1, 0, 1, armorBlob));
+		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 5, blobBoss));
+		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 140, 140, 0, 0, 5, fastBoss));
+		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.75f, 120, 120, 5, 0, 5, armorBoss));
 	}
 
 	public void InitWalls() {
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour {
 				// Player lost the game
 
 				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
-				GameManager.instance.highscore["wave"] = waveID;
+				//GameManager.instance.highscore["wave"] = waveID;
 
 
 				souls = 0;
