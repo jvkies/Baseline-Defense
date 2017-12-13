@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour {
 
-	private int waveCount;
+//	private int waveCount;
 	private float waitBetweenMobs = 0.3f;
 	private float deltaSum = 0;
 	//private string[] waveMobs = { "blob", "blob", "fastblob", "airblob", "blobboss", "blob", "blob", "fastblob", "airblob", "fastboss", "blob", "blob", "fastblob", "airblob", "airboss"};
@@ -31,7 +31,6 @@ public class Spawner : MonoBehaviour {
 		enemyContainer = GameObject.FindWithTag("EnemyContainer");
 		menuController = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 		buttonEffectImage = buttonEffect.GetComponent<Image> ();
-		waveCount = 0;
 
 	//	waves = new Dictionary<int, Wave>();
 		waveMob = new Dictionary<int, List<GameObject>>();
@@ -127,14 +126,20 @@ public class Spawner : MonoBehaviour {
 		if (GameManager.instance.isGameLost == false) {
 
 			// Give money to player after survival
-			if (waveCount != 1)
-				GameManager.instance.UpdateSouls (Mathf.Ceil(10+waveCount-1));
+			if (GameManager.instance.waveID != 1)
+				GameManager.instance.UpdateSouls (Mathf.Ceil(10+GameManager.instance.waveID-1));
 			
 			if (waveID != maxWaveAmount) {
 				startWaveContainer.SetActive (true);
 			} else {
 				if (GameManager.instance.isGameLost != true) {
+					// Player wins the game
+
+					GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
+					GameManager.instance.highscore["wave"] = waveID;
+
 					menuController.DisplayWin ();
+					menuController.DisplayEndGamePanel ();
 				}
 			}
 		}
@@ -213,13 +218,20 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public void NextWave() {
-		waveCount += 1;
-		waveMob.Add (waveCount, new List<GameObject>());
 
-		menuController.SetWaveButtonText ("Start Wave "+(waveCount+1).ToString());
+		if (GameManager.instance.waveID == 0)
+			GameManager.instance.startGameTime = Time.time;
+
+		GameManager.instance.waveID += 1;
+
+		int _waveID = GameManager.instance.waveID;
+
+		waveMob.Add (_waveID, new List<GameObject>());
+
+		menuController.SetWaveButtonText ("Start Wave "+(_waveID+1).ToString());
 
 		startWaveContainer.SetActive (false);
-		StartCoroutine(StartWave(waveCount));
+		StartCoroutine(StartWave(_waveID));
 
 	}
 }

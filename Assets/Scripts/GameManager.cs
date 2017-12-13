@@ -27,11 +27,14 @@ public class GameManager : MonoBehaviour {
 	public bool isTowerSelected = false;
 	public bool isGameLost = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
+	public float startGameTime;
+	public int waveID = 0;
 	public GameObject draggedTower;
 	public GameObject selectedTower;
 	public AudioClip[] musicClipsPreload;
 	public Dictionary<string, Tower> tower;
 	public Dictionary<string, Mob> mobs;
+	public Dictionary<string, int> highscore;			// "wave" -> 18, "time" -> 236
 	public GameObject wallPrefab;
 	public GameObject blob;
 	public GameObject fastBlob;
@@ -109,12 +112,17 @@ public class GameManager : MonoBehaviour {
 			menuScript.BuildTower ("rocktower1");
 		}
 
-			
 	}
 
 	private void InitNewGame() {
 		InitWalls ();
 
+		highscore = new Dictionary<string, int> ();
+		highscore.Add ("wave", 0);
+		highscore.Add ("time", 0);
+		highscore.Add ("mobs", 0);
+
+		waveID = 0;
 		isGameLost = false;
 		isDragging = false;
 		souls = 141;
@@ -134,17 +142,6 @@ public class GameManager : MonoBehaviour {
 		tower.Add ("rocktower3", new Tower ("rocktower3", "Rock Tower 3", "rocktower4",  64,  51,  24, 3, 0.333f, 4,  0.8f, 4, new Color32 (150, 150, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
 		tower.Add ("rocktower4", new Tower ("rocktower4", "Rock Tower 4", "rocktower5", 116, 145,  48, 4, 0.333f, 4, 0.85f, 4, new Color32 (255, 20, 20, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
 		tower.Add ("rocktower5", new Tower ("rocktower5", "Rock Tower 5", null, 		261,   0, 120, 5, 0.333f, 5,    1f, 4, new Color32 (220, 220, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-
-		//tower.Add ("bullettower1", new Tower ("bullettower1", "Bullet Tower 1", "bullettower2",   5, 10,  3, 1,    1,    2, 0, 8, new Color32 (0, 0, 0, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		//tower.Add ("bullettower2", new Tower ("bullettower2", "Bullet Tower 2", "bullettower3",  15, 20,  5, 2,    2,    3, 0, 8, new Color32 (50, 50, 220, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		//tower.Add ("bullettower3", new Tower ("bullettower3", "Bullet Tower 3", "bullettower4",  35, 35,  7, 3, 2.5f,    4, 0, 8, new Color32 (150, 150, 50, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		//tower.Add ("bullettower4", new Tower ("bullettower4", "Bullet Tower 4", "bullettower5",  70, 65, 10, 4,    3, 4.5f, 0, 8, new Color32 (255, 20, 20, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		//tower.Add ("bullettower5", new Tower ("bullettower5", "Bullet Tower 5", null, 			135,  0, 13, 5, 3.5f,    5, 0, 8, new Color32 (220, 220, 50, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		//tower.Add ("rocktower1", new Tower ("rocktower1", "Rock Tower 1", "rocktower2",  10,  25, 10, 1, 0.4f,    4, 0.7f, 4, new Color32 (0, 0, 0, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		//tower.Add ("rocktower2", new Tower ("rocktower2", "Rock Tower 2", "rocktower3",  35,  50, 15, 2, 0.4f, 4.5f, 0.8f, 4, new Color32 (50, 50, 220, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		//tower.Add ("rocktower3", new Tower ("rocktower3", "Rock Tower 3", "rocktower4",  85,  80, 20, 3, 0.4f,    5, 0.8f, 4, new Color32 (150, 150, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		//tower.Add ("rocktower4", new Tower ("rocktower4", "Rock Tower 4", "rocktower5", 165, 110, 30, 4, 0.4f, 5.5f,    1, 4, new Color32 (255, 20, 20, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		//tower.Add ("rocktower5", new Tower ("rocktower5", "Rock Tower 5", null, 		275,   0, 40, 5, 0.4f,    6, 1.2f, 4, new Color32 (220, 220, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
 
 		mobs = new Dictionary<string, Mob>();
 		mobs.Add ("blob", 		new Mob ("blob", "Blob", 			 	 	 1,     1,  10,  10, 0, 0, 1, blob));
@@ -198,9 +195,16 @@ public class GameManager : MonoBehaviour {
 			souls += amount;
 
 			if (souls <= 0) {
+				// Player lost the game
+
+				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
+				GameManager.instance.highscore["wave"] = waveID;
+
+
 				souls = 0;
 				isGameLost = true;
 				menuScript.DisplayLoose ();
+				menuScript.DisplayEndGamePanel ();
 				menuScript.startWaveContainer.SetActive (false);
 			}
 

@@ -8,7 +8,6 @@ public class MobController : MonoBehaviour {
 	private Rigidbody2D mobRb2D;
 	private Transform towerspotContainer;
 	private GameObject healthBarInstance;
-	private GameObject yellowCrystal;
 	private GameObject healthbarContainer;
 
 	public Mob mobData;
@@ -19,7 +18,6 @@ public class MobController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		healthbarContainer = GameObject.FindWithTag("HealthbarContainer");
-		yellowCrystal = GameObject.FindWithTag("YellowCrystal");
 
 		healthBarInstance = Instantiate (healthBarPrefab, gameObject.transform.position, Quaternion.identity);
 		healthBarInstance.transform.SetParent (healthbarContainer.transform, false);

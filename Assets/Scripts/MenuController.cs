@@ -33,6 +33,7 @@ public class MenuController : MonoBehaviour {
 	public GameObject startWaveContainer;
 	public Text tipText;
 	public Text waveButtonText;
+	public GameObject endGamePanel;
 
 	private string[] tipArray = {
 		"Tip: Hold down shift to place multiple towers.",
@@ -165,9 +166,17 @@ public class MenuController : MonoBehaviour {
 		waveButtonText.text = text;
 	}
 
+	public void DisplayEndGamePanel() {
+		endGamePanel.SetActive (true);
+	}
+
 	public void Retry() {
 		ToggleEscapeMenu ();
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+	}
+
+	public void HighscoreScene() {
+		SceneManager.LoadScene ("Highscores");
 	}
 
 	public void ExitApplication() {
