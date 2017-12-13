@@ -61,6 +61,8 @@ public class MobController : MonoBehaviour {
 			//GameManager.instance.money += mobData.moneyWorth;
 			GameManager.instance.UpdateSouls (mobData.moneyWorth);
 
+			GameManager.instance.highscore["mobs"] += 1;
+
 			//GameObject soulGO = Instantiate (soul, gameObject.transform.position, Quaternion.identity);
 			//soulGO.transform.SetParent (yellowCrystal.transform);
 
@@ -71,7 +73,6 @@ public class MobController : MonoBehaviour {
 
 	void OnTriggerEnter2D ( Collider2D other) {
 		if (other.tag == "Finish") {
-
 			GameManager.instance.UpdateSouls (-mobData.mobHeartDamage);
 			Destroy (healthBarInstance);
 			Destroy (gameObject);
