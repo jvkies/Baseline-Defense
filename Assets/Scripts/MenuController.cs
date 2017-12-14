@@ -35,11 +35,11 @@ public class MenuController : MonoBehaviour {
 	public Text waveButtonText;
 	public GameObject endGamePanel;
 
-	private string[] tipArray = {
-		"Tip: Hold down shift to place multiple towers.",
-		"Tip: Did you figure out the spawning pattern yet?",
-		"Tip: Always brush your teeth before going to bed.",
-	};
+	//private string[] tipArray = {
+	//	"Tip: Hold down shift to place multiple towers.",
+	//	"Tip: Did you figure out the spawning pattern yet?",
+	//	"Tip: Always brush your teeth before going to bed.",
+	//};
 
 	void Update () {
 		if (GameManager.instance.isDragging) {
@@ -158,9 +158,9 @@ public class MenuController : MonoBehaviour {
 		} else {
 			// open escape menu
 
-			tipText.text = tipArray [tipIndex];
+			tipText.text = Tipps.tipArray [tipIndex];
 			tipIndex += 1;
-			if (tipIndex >= tipArray.Length)
+			if (tipIndex >= Tipps.tipArray.Length)
 				tipIndex = 0;
 
 			if (GameManager.instance.isTowerSelected)

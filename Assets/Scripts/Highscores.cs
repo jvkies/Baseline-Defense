@@ -7,6 +7,8 @@ using System;
 
 public class Highscores : MonoBehaviour {
 
+	public string addScoreURL;
+
 	private float waitBetweenSteps = 0.05f;
 
 	public float countTime = 3f;				// time the counter should be running
@@ -50,6 +52,43 @@ public class Highscores : MonoBehaviour {
 
 	public void ExitApplication() {
 		Application.Quit ();
+	}
+
+	public void SendMyHighscore() {
+		//string hash = Md5Sum(name + score + secretKey);
+
+		//string post_url = addScoreURL + "name=" + WWW.EscapeURL(name) + "&score=" + score + "&hash=" + hash;
+
+	}
+
+	public void GetAllHighscore() {
+
+		// bau hash
+		string hash = "";
+		// Hash128 hash
+
+		// baue mir den post string zusammen
+		string postUrlGetHighscore = addScoreURL + "?GetHighscore" + "&hash=" + hash;
+
+		// schicke an script online auf webbseite
+		WWW www = new WWW(postUrlGetHighscore); //GET data is sent via the URL
+
+		// empfange daten
+
+//		while(!www.isDone && string.IsNullOrEmpty(www.error)) {
+//			gameObject.guiText.text = "Loading... " + www.Progress.ToString("0%"); //Show progress
+//			yield return null;
+//		}
+
+//		if(string.IsNullOrEmpty(www.error)) gameObject.guiText.text = www.text;
+//		else Debug.LogWarning(www.error);
+
+		// zeige daten in spietabelle an
+		AddPlayerToHighscore();
+	}
+
+	private void AddPlayerToHighscore() {
+
 	}
 		
 }
