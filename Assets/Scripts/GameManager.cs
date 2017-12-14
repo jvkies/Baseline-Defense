@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Reflection;
 using Random = UnityEngine.Random;
 
@@ -22,14 +23,14 @@ public class GameManager : MonoBehaviour {
 	//private UnityEngine.Object[] MusicClips;			// Music disabled due to long load times
 
 	public int souls = 71;
-	public float soulSpread = 2f;							// how large the area is when multiple souls are beeing spawned
+	public float soulSpread = 2f;						// how large the area is when multiple souls are beeing spawned
 	public int wallPercent = 7;
 	public bool isDragging = false;
 	public bool isTowerSelected = false;
 	public bool isGameLost = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
 	[HideInInspector]
-	public float startGameTime;
+	public float startWaveTime;							// Time.time the first wave was called
 	public int waveID = 0;
 	public GameObject draggedTower;
 	public GameObject selectedTower;
@@ -113,9 +114,15 @@ public class GameManager : MonoBehaviour {
 			StopDragging ();
 		}	
 		if (Input.GetKeyDown (KeyCode.Alpha1)) {
+			if (isDragging) {
+				StopDragging ();
+			}
 			menuScript.BuildTower ("bullettower1");
 		}
 		if (Input.GetKeyDown (KeyCode.Alpha2)) {
+			if (isDragging) {
+				StopDragging ();
+			}
 			menuScript.BuildTower ("rocktower1");
 		}
 
@@ -159,7 +166,7 @@ public class GameManager : MonoBehaviour {
 		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	0,  1, 0.75f,   8,   8, 1, 0, 1, armorBlob));
 		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 5, blobBoss));
 		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 140, 140, 0, 0, 5, fastBoss));
-		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.75f, 120, 120, 5, 0, 5, armorBoss));
+		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.75f, 120, 120, 3, 0, 5, armorBoss));
 	}
 
 	public void InitWalls() {
@@ -214,16 +221,22 @@ public class GameManager : MonoBehaviour {
 				}
 			} else {
 				// gaining money
+
+				if (isTowerSelected && selectedTower.GetComponent<TowerController>().towerStats.upgradeCost < souls) {
+					menuScript.upgradeButton.GetComponent<Button> ().interactable = true;
+				}
+					
 				if (position == null) {
 					Debug.Log ("Error: position parameter of UpdateSouls can't be empty / null when increading soul amount");
 				}
+
 				Spawn2Souls(amount, position.transform.position);
 			}
 
 			if (souls <= 0) {
 				// Player lost the game
 
-				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
+				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startWaveTime);
 
 				souls = 0;
 				isGameLost = true;

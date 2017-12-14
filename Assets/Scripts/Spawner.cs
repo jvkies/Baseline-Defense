@@ -16,18 +16,18 @@ public class Spawner : MonoBehaviour {
 	private MenuController menuController;
 	private Image buttonEffectImage;
 
-	public int baseSoulInterest = 12;				// base amount of souls added each wave (interest), total amount is baseAmoun+waveid-1
-	public int maxWaveAmount = 50;				// maximum number of waves until you win
-	public int maxSimulWaves = 5;				// maximum number of waves which can be called early
-	public float healthScaleFactor = 0.3f;		// scale factor the health of the mobs increase per wave
+	public int baseSoulInterest = 12;					// base amount of souls added each wave (interest), total amount is baseAmoun+waveid-1
+	public int bonusInterestTime = 24;					// time the player has to call the wave early, calling a wave early in this seconds gives bonus interest
+	public int maxWaveAmount = 50;						// maximum number of waves until you win
+	public int maxSimulWaves = 5;						// maximum number of waves which can be called early
+	public float healthScaleFactor = 0.3f;				// scale factor the health of the mobs increase per wave
 	public Color32 highlightColor = new Color32 (255, 255, 0, 255);
 	public Color32 standardColor = new Color32 (216, 18, 15, 255);
-	//public Dictionary<int, Wave> waves;
 	public GameObject buttonEffect;
 	public GameObject startWaveContainer;
 	public AnimationCurve colorCurve;
-	public Dictionary<int, List<GameObject>> waveMob;
-	//public Dictionary<int, int> waveMob;
+	public Dictionary<int, List<GameObject>> waveMob;	// waveId -> mobGameObject[], maps the waveID to all mob Instances in this wave
+	public Dictionary<int, float> waveTime;				// waveID -> Time.time when this wave was started
 
 	// Use this for initialization
 	void Start () {
@@ -35,24 +35,8 @@ public class Spawner : MonoBehaviour {
 		menuController = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 		buttonEffectImage = buttonEffect.GetComponent<Image> ();
 
-	//	waves = new Dictionary<int, Wave>();
 		waveMob = new Dictionary<int, List<GameObject>>();
-
-	//	for (int waveCount = 0; waveCount < waveMobs.Length; waveCount++) {
-	//		waves.Add(waveCount,new Wave(waveCount,waveMobs[waveCount],waveMobsAmount[waveCount]));
-	//	}
-			
-	//	waves.Add(1,new Wave(1,"blob1",20));
-	//	waves.Add(2,new Wave(2,"blob1",20));
-	//	waves.Add(3,new Wave(3,"blob1",20));
-	//	waves.Add(4,new Wave(4,"blob1",20));
-	//	waves.Add(5,new Wave(5,"blobboss1",1));
-
-	//	waves.Add(6,new Wave(6,"blob2",20));
-	//	waves.Add(7,new Wave(7,"blob2",20));
-	//	waves.Add(8,new Wave(8,"blob2",30));
-	//	waves.Add(9,new Wave(9,"blobboss2",1));
-
+		waveTime = new Dictionary<int, float>();
 	}
 
 	// Update is called once per frame
@@ -133,15 +117,15 @@ public class Spawner : MonoBehaviour {
 
 			// Give interest money to player after survival
 			if (GameManager.instance.waveID != maxWaveAmount) {
-				GameManager.instance.UpdateSouls (baseSoulInterest + GameManager.instance.waveID - 1, GameManager.instance.yellowCrystal);
-				Debug.Log("payed interest: "+ (baseSoulInterest + GameManager.instance.waveID - 1));
+				GameManager.instance.UpdateSouls (GetInterest(waveID), GameManager.instance.yellowCrystal);
+				Debug.Log("payed interest: "+ GetInterest(waveID));
 			}
 			if (waveID == maxWaveAmount) {
 				startWaveContainer.SetActive (false);
 //				if (GameManager.instance.isGameLost != true) { // TODO: checked twice?
 					// Player wins the game
 
-				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
+				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startWaveTime);
 
 				menuController.DisplayWin ();
 				menuController.DisplayEndGamePanel ();
@@ -224,16 +208,36 @@ public class Spawner : MonoBehaviour {
 			
 	}
 
+	private int GetInterest ( int waveID ) {
+		int interest = baseSoulInterest + waveID - 1;
+		return interest + CallWaveEarlyBonusMoney (waveID, interest);
+	}
+
+	private int CallWaveEarlyBonusMoney(int waveID, int interest) {
+		if (waveTime.ContainsKey (waveID + 1)) {
+			float percentBonus = 1 - ((waveTime [waveID+1] - waveTime [waveID]) / bonusInterestTime);
+			//Debug.Log ("called early after: "+(waveTime [waveID+1] - waveTime [waveID])+" seconds");
+			//Debug.Log ("percent bonus: " + percentBonus);
+			//Debug.Log("bonus interest: "+Mathf.RoundToInt( interest * percentBonus)+" (of interest: "+interest+")");			
+			return Mathf.RoundToInt (interest * percentBonus);
+		} else {
+			return 0;
+		}
+
+
+	}
+
 	public void NextWave() {
 		if (waveMob.Count <= maxSimulWaves) {
-			if (GameManager.instance.waveID == 0)
-				GameManager.instance.startGameTime = Time.time;
-
 			GameManager.instance.waveID += 1;
-
 			int _waveID = GameManager.instance.waveID;
 
+			if (_waveID == 1) {
+				GameManager.instance.startWaveTime = Time.time;
+			} 
+
 			waveMob.Add (_waveID, new List<GameObject> ());
+			waveTime.Add (_waveID, Time.time);
 
 			menuController.SetWaveButtonText ("Start Wave " + (_waveID + 1).ToString ());
 

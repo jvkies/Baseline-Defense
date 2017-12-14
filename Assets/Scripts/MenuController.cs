@@ -120,6 +120,11 @@ public class MenuController : MonoBehaviour {
 			upgradeFireRateValue.GetComponent<Text> ().text = upgradeTower.towerFireRate.ToString();
 			upgradeRangeValue.GetComponent<Text> ().text = upgradeTower.towerRange.ToString();
 			upgradeCostValue.GetComponent<Text> ().text = towerStats.upgradeCost.ToString();
+			if (towerStats.upgradeCost > GameManager.instance.souls) {
+				upgradeButton.GetComponent<Button> ().interactable = false;
+			} else {
+				upgradeButton.GetComponent<Button> ().interactable = true;
+			}
 
 		}
 		towerMenuPanel.SetActive (true);
@@ -142,11 +147,14 @@ public class MenuController : MonoBehaviour {
 		waveDisplayer.SetActive (true);
 	}
 
+	public void CloseEscapeMenu() {
+		escapeMenuPanel.SetActive (false);
+		Time.timeScale = 1;
+	}
+
 	public void ToggleEscapeMenu() {
 		if (escapeMenuPanel.activeSelf) {
-			// close escape menu
-			escapeMenuPanel.SetActive (false);
-			Time.timeScale = 1;
+			CloseEscapeMenu();
 		} else {
 			// open escape menu
 
@@ -171,7 +179,7 @@ public class MenuController : MonoBehaviour {
 	}
 
 	public void Retry() {
-		ToggleEscapeMenu ();
+		CloseEscapeMenu ();
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 
