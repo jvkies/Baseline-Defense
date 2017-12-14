@@ -399,7 +399,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ae81a6aace54feb90586f28b7c9ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxWaveAmount: 100
+  baseSoulInterest: 12
+  maxWaveAmount: 50
+  maxSimulWaves: 5
   healthScaleFactor: 0.5
   highlightColor:
     serializedVersion: 2

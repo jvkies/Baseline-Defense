@@ -162,7 +162,7 @@ public class TowerController : MonoBehaviour {
 		towerSpot.GetComponent<BoxCollider2D> ().enabled = true;
 		towerSpot.GetComponent<TowerSpot>().towerInSlot = null;
 
-		GameManager.instance.UpdateSouls (towerStats.towerCost * sellMultiplier);
+		GameManager.instance.UpdateSouls (Mathf.FloorToInt( towerStats.towerCost * sellMultiplier), GameManager.instance.yellowCrystal);
 		AstarPath.active.UpdateGraphs (gameObject.GetComponent<BoxCollider2D> ().bounds);
 
 		// tell every Mob to calculate a new Path

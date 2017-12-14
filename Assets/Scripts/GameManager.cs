@@ -21,16 +21,19 @@ public class GameManager : MonoBehaviour {
 	//private Spawner spawnblock;
 	//private UnityEngine.Object[] MusicClips;			// Music disabled due to long load times
 
-	public float souls = 71;
+	public int souls = 71;
+	public float soulSpread = 2f;							// how large the area is when multiple souls are beeing spawned
 	public int wallPercent = 7;
 	public bool isDragging = false;
 	public bool isTowerSelected = false;
 	public bool isGameLost = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
+	[HideInInspector]
 	public float startGameTime;
 	public int waveID = 0;
 	public GameObject draggedTower;
 	public GameObject selectedTower;
+	[HideInInspector]
 	public AudioClip[] musicClipsPreload;
 	public Dictionary<string, Tower> tower;
 	public Dictionary<string, Mob> mobs;
@@ -46,7 +49,10 @@ public class GameManager : MonoBehaviour {
 	public GameObject armorBoss;
 	public Sprite bullettowerHeadWhite;
 	public Sprite rocktowerHeadWhite;
-
+	public GameObject soulPrefab;
+	public Queue<GameObject> soulInstances;
+	[HideInInspector]
+	public GameObject yellowCrystal;
 
 	void Awake () {
 		if (instance == null) {
@@ -70,6 +76,7 @@ public class GameManager : MonoBehaviour {
 			try {
 				menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 				towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
+				yellowCrystal = GameObject.FindWithTag ("YellowCrystal");
 
 				InitNewGame();
 
@@ -117,6 +124,8 @@ public class GameManager : MonoBehaviour {
 	private void InitNewGame() {
 		InitWalls ();
 
+		soulInstances = new Queue<GameObject> ();
+
 		highscore = new Dictionary<string, int> ();
 		highscore.Add ("wave", 0);
 		highscore.Add ("time", 0);
@@ -128,6 +137,7 @@ public class GameManager : MonoBehaviour {
 		souls = 141;
 
 		menuScript.UpdateSouls (souls.ToString ());
+		Spawn2Souls (souls, yellowCrystal.transform.position);
 	}
 
 	private void InitTowerAndMobData() {
@@ -190,16 +200,30 @@ public class GameManager : MonoBehaviour {
 		souls = 71;
 	}
 
-	public void UpdateSouls(float amount) {
+	public void UpdateSouls(int amount, GameObject position = null) {
 		if (!isGameLost) {
 			souls += amount;
+
+			if (amount < 0) {
+				// spending/leaking money
+				if (souls <= 0) { // in case you have 5 souls but loose 10
+					amount = -soulInstances.Count;
+				}
+				for (int i = 0; i > amount; i--) {
+					Destroy (soulInstances.Dequeue ());
+				}
+			} else {
+				// gaining money
+				if (position == null) {
+					Debug.Log ("Error: position parameter of UpdateSouls can't be empty / null when increading soul amount");
+				}
+				Spawn2Souls(amount, position.transform.position);
+			}
 
 			if (souls <= 0) {
 				// Player lost the game
 
 				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
-				//GameManager.instance.highscore["wave"] = waveID;
-
 
 				souls = 0;
 				isGameLost = true;
@@ -211,6 +235,20 @@ public class GameManager : MonoBehaviour {
 			menuScript.UpdateSouls (souls.ToString ());
 		}
 
+	}
+
+	public void Spawn2Souls(int amount, Vector3 position) {
+		Vector3 offsetPos = new Vector3(0,0,0);
+
+		for (int i = 0; i < amount; i++) {
+			if (amount != 1) {
+				offsetPos = new Vector3 (Random.Range (-soulSpread,soulSpread), Random.Range (-soulSpread, soulSpread), 0);
+			}
+
+			GameObject soulGO = Instantiate (soulPrefab, position + offsetPos, Quaternion.identity);
+			soulGO.transform.SetParent (yellowCrystal.transform);
+			soulInstances.Enqueue (soulGO);
+		}
 	}
 		
 	private void InitMusic() {

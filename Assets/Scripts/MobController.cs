@@ -64,37 +64,42 @@ public class MobController : MonoBehaviour {
 
 			isDefeated = true;		// the TakeDamage function may be called while the mob already has < 0 hp
 
-			GameManager.instance.UpdateSouls (mobData.moneyWorth);
-			if (!GameManager.instance.isGameLost)
-				GameManager.instance.highscore ["mobs"] += 1;
-
-			//GameObject soulGO = Instantiate (soul, gameObject.transform.position, Quaternion.identity);
-			//soulGO.transform.SetParent (yellowCrystal.transform);
-
-			// remove this mob from the waveMob Dict
-			spawnScript.waveMob [mobData.waveID].Remove(gameObject);
-
-			// if the last mob was removed, remove the wave from waveMob Dict
-			if (spawnScript.waveMob [mobData.waveID].Count == 0) {
-				Debug.Log("wave "+mobData.waveID+" clear");
-				GameManager.instance.highscore["wave"] = mobData.waveID;
-				spawnScript.waveMob.Remove (mobData.waveID);
-			}
-
-			Destroy (healthBarInstance);
-			Destroy (gameObject);
+			KillMob ();
 		}
 	}
 
 	void OnTriggerEnter2D ( Collider2D other) {
 		if (other.tag == "Finish") {
-			GameManager.instance.UpdateSouls (-mobData.mobHeartDamage);
-			Destroy (healthBarInstance);
-			Destroy (gameObject);
+			// mob reached finish
+
+			KillMob (true);
 		}
-	//	if (other.tag == "Waypoint") {
-	//		nextWaypoint = waypoints.Dequeue ();
-	//	}
+	}
+
+	private void KillMob(bool isLeaking = false) {
+		if (isLeaking) {
+			GameManager.instance.UpdateSouls (-mobData.mobHeartDamage);
+		} else {
+			GameManager.instance.UpdateSouls (mobData.moneyWorth, gameObject);
+
+			if (!GameManager.instance.isGameLost) {
+				GameManager.instance.highscore ["mobs"] += 1;
+			}
+
+		}
+
+		// remove this mob from the waveMob Dict
+		spawnScript.waveMob [mobData.waveID].Remove(gameObject);
+
+		// if the last mob was removed, remove the wave from waveMob Dict
+		if (spawnScript.waveMob [mobData.waveID].Count == 0) {
+			Debug.Log("wave "+mobData.waveID+" clear");
+			GameManager.instance.highscore["wave"] = mobData.waveID;
+			spawnScript.waveMob.Remove (mobData.waveID);
+		}
+
+		Destroy (healthBarInstance);
+		Destroy (gameObject);
 
 	}
 

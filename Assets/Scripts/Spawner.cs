@@ -16,6 +16,7 @@ public class Spawner : MonoBehaviour {
 	private MenuController menuController;
 	private Image buttonEffectImage;
 
+	public int baseSoulInterest = 12;				// base amount of souls added each wave (interest), total amount is baseAmoun+waveid-1
 	public int maxWaveAmount = 50;				// maximum number of waves until you win
 	public int maxSimulWaves = 5;				// maximum number of waves which can be called early
 	public float healthScaleFactor = 0.3f;		// scale factor the health of the mobs increase per wave
@@ -128,24 +129,23 @@ public class Spawner : MonoBehaviour {
 		//		Debug.Log("wave "+waveID+" cleared");
 		}
 			
-			
 		if (GameManager.instance.isGameLost == false) {
 
-			// Give money to player after survival
-			if (GameManager.instance.waveID != 1)
-				GameManager.instance.UpdateSouls (Mathf.Ceil(10+GameManager.instance.waveID-1));
-			
+			// Give interest money to player after survival
+			if (GameManager.instance.waveID != maxWaveAmount) {
+				GameManager.instance.UpdateSouls (baseSoulInterest + GameManager.instance.waveID - 1, GameManager.instance.yellowCrystal);
+				Debug.Log("payed interest: "+ (baseSoulInterest + GameManager.instance.waveID - 1));
+			}
 			if (waveID == maxWaveAmount) {
 				startWaveContainer.SetActive (false);
-		//	} else {
-				if (GameManager.instance.isGameLost != true) {
+//				if (GameManager.instance.isGameLost != true) { // TODO: checked twice?
 					// Player wins the game
 
-					GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
+				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startGameTime);
 
-					menuController.DisplayWin ();
-					menuController.DisplayEndGamePanel ();
-				}
+				menuController.DisplayWin ();
+				menuController.DisplayEndGamePanel ();
+	
 			}
 		}
 
