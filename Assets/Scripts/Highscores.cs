@@ -1,15 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
+
 
 public class Highscores : MonoBehaviour {
 
 	public string addScoreURL;
 
 	private float waitBetweenSteps = 0.05f;
+
+	private string postUrl = "http://lmt.jovin.de/BD_db_connector.php";
+	private string secretKey = "abc123";
 
 	public float countTime = 3f;				// time the counter should be running
 	public Text waveHighscore;
@@ -18,12 +23,14 @@ public class Highscores : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
 		//timeHighscore.text = GameManager.instance.highscore ["time"].ToString ();
 
-		StartCoroutine(CountTo(GameManager.instance.highscore ["wave"],waveHighscore));
-		StartCoroutine(CountTo(GameManager.instance.highscore ["time"],timeHighscore,true));
-		StartCoroutine(CountTo(GameManager.instance.highscore ["mobs"],mobsHighscore));
+//		StartCoroutine(CountTo(GameManager.instance.highscore ["wave"],waveHighscore));
+//		StartCoroutine(CountTo(GameManager.instance.highscore ["time"],timeHighscore,true));
+//		StartCoroutine(CountTo(GameManager.instance.highscore ["mobs"],mobsHighscore));
 
+		GetHighscores ();
 	}
 	
 
@@ -54,41 +61,88 @@ public class Highscores : MonoBehaviour {
 		Application.Quit ();
 	}
 
-	public void SendMyHighscore() {
-		//string hash = Md5Sum(name + score + secretKey);
+	public IEnumerator SendPostRequest(string url, WWWForm form, Action successCallback = null)
+	{
+		using (UnityWebRequest www = UnityWebRequest.Post(url, form))
+		{
+			yield return www.Send();
 
-		//string post_url = addScoreURL + "name=" + WWW.EscapeURL(name) + "&score=" + score + "&hash=" + hash;
+			if (www.isNetworkError || www.isHttpError)
+			{
+				Debug.Log(www.error);
+			}
+			else
+			{
+				if (successCallback != null )
+				{
+					successCallback(www.downloadHandler.text);
+				}
+			}
 
+		}
 	}
 
-	public void GetAllHighscore() {
+	public IEnumerator SendHighscore(string name, Dictionary<string, int> highscore)
+	{
+		int wave = highscore ["wave"];
+		int time = highscore ["time"];
+		int mobs = highscore ["mobs"];
 
-		// bau hash
-		string hash = "";
-		// Hash128 hash
+		string hash = Md5Sum(name + wave + time + mobs + secretKey);
 
-		// baue mir den post string zusammen
-		string postUrlGetHighscore = addScoreURL + "?GetHighscore" + "&hash=" + hash;
+		WWWForm form = new WWWForm();
+		form.AddField("action", "Highscore");
+		form.AddField("name", name);
+		form.AddField("wave", wave);
+		form.AddField("time", time);
+		form.AddField("mobs", mobs);
+		form.AddField("hash", hash);
 
-		// schicke an script online auf webbseite
-		WWW www = new WWW(postUrlGetHighscore); //GET data is sent via the URL
-
-		// empfange daten
-
-//		while(!www.isDone && string.IsNullOrEmpty(www.error)) {
-//			gameObject.guiText.text = "Loading... " + www.Progress.ToString("0%"); //Show progress
-//			yield return null;
-//		}
-
-//		if(string.IsNullOrEmpty(www.error)) gameObject.guiText.text = www.text;
-//		else Debug.LogWarning(www.error);
-
-		// zeige daten in spietabelle an
-		AddPlayerToHighscore();
+		StartCoroutine (SendPostRequest(postUrl, form));
 	}
+
+	public void GetHighscores()
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("action", "getHighscore");
+		StartCoroutine (SendPostRequest(postUrl, form, processHighscoreResult));
+	}
+
+//	public void GetAllHighscore() {
+//
+//		// bau hash
+//		string hash = "";
+//		// Hash128 hash
+//
+//		// baue mir den post string zusammen
+//		string postUrlGetHighscore = addScoreURL + "?GetHighscore" + "&hash=" + hash;
+//
+//		// schicke an script online auf webbseite
+//		WWW www = new WWW(postUrlGetHighscore); //GET data is sent via the URL
+//
+//		// empfange daten
+//
+////		while(!www.isDone && string.IsNullOrEmpty(www.error)) {
+////			gameObject.guiText.text = "Loading... " + www.Progress.ToString("0%"); //Show progress
+////			yield return null;
+////		}
+//
+////		if(string.IsNullOrEmpty(www.error)) gameObject.guiText.text = www.text;
+////		else Debug.LogWarning(www.error);
+//
+//		// zeige daten in spietabelle an
+//		AddPlayerToHighscore();
+//	}
 
 	private void AddPlayerToHighscore() {
 
 	}
+
+	private void processHighscoreResult(String result)
+	{
+		Debug.Log (result);
+	}
+
+
 		
 }
