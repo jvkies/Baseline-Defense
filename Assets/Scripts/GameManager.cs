@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector]
 	public float startWaveTime;							// Time.time the first wave was called
 	public int waveID = 0;
+	public string version;
 	public GameObject draggedTower;
 	public GameObject selectedTower;
 	[HideInInspector]

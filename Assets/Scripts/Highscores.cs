@@ -38,15 +38,7 @@ public class Highscores : MonoBehaviour {
 			StartCoroutine (CountTo (GameManager.instance.highscore ["time"], timeHighscore, true));
 			StartCoroutine (CountTo (GameManager.instance.highscore ["mobs"], mobsHighscore));
 		}
-
-		//		Example SendHighscore Call
-		//		Dictionary<string, int> hs = new Dictionary<string, int> ();
-		//		hs.Add ("wave", 10);
-		//		hs.Add ("time", 1500);
-		//		hs.Add ("mobs", 500);
-		//		SendHighscore ("cray", hs);
-
-//		Example GetHighscore Call
+			
 		GetHighscores (processHighscoreResult);
 	}
 
@@ -124,7 +116,7 @@ public class Highscores : MonoBehaviour {
 		form.AddField("wave", wave);
 		form.AddField("time", time);
 		form.AddField("mobs", mobs);
-		form.AddField("version", "0.0.0");
+		form.AddField("version", GameManager.instance.version);
 		form.AddField("hash", hash);
 
 		StartCoroutine (SendPostRequest(postUrl, form, sendHighscoreCallback));
@@ -148,7 +140,9 @@ public class Highscores : MonoBehaviour {
 	private void sendHighscoreCallback(string result) {
 		Debug.Log (result);
 		if (result == "1") {
-			submitButtonText.text =  "Success!";
+			submitButtonText.text = "Success!";
+		} else {
+			submitButtonText.text = "Error";
 		}
 		GetHighscores (processHighscoreResult);
 

@@ -9,6 +9,7 @@ public class SetVersion : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		GameManager.instance.version = version.text;
 		GetComponent<Text> ().text = version.text;
 	}
 	
