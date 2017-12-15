@@ -13,6 +13,7 @@ public class Highscores : MonoBehaviour {
 
 	private float waitBetweenSteps = 0.05f;
 
+	// TODO: This should probably be in a config file
 	private string postUrl = "http://lmt.jovin.de/BD_db_connector.php";
 	private string secretKey = "abc123";
 
@@ -30,9 +31,17 @@ public class Highscores : MonoBehaviour {
 //		StartCoroutine(CountTo(GameManager.instance.highscore ["time"],timeHighscore,true));
 //		StartCoroutine(CountTo(GameManager.instance.highscore ["mobs"],mobsHighscore));
 
-		GetHighscores ();
+
+//		Example SendHighscore Call
+//		Dictionary<string, int> hs = new Dictionary<string, int> ();
+//		hs.Add ("wave", 10);
+//		hs.Add ("time", 1500);
+//		hs.Add ("mobs", 500);
+//		SendHighscore ("cray", hs);
+
+//		Example GetHighscore Call
+		GetHighscores (processHighscoreResult);
 	}
-	
 
 	IEnumerator CountTo(int countTo, Text textField, bool isTime = false) {
 		int currentCount = 0;
@@ -49,7 +58,6 @@ public class Highscores : MonoBehaviour {
 			}
 			currentCount += 1;
 			yield return new WaitForSeconds (waitBetweenSteps);
-				
 		}
 	}
 
@@ -61,37 +69,39 @@ public class Highscores : MonoBehaviour {
 		Application.Quit ();
 	}
 
-	public IEnumerator SendPostRequest(string url, WWWForm form, Action successCallback = null)
+	// TODO: Do we want to return something on error which the callback may handle, like null?
+	private IEnumerator SendPostRequest(string url, WWWForm form, Action<string> successCallback = null)
 	{
 		using (UnityWebRequest www = UnityWebRequest.Post(url, form))
 		{
 			yield return www.Send();
 
-			if (www.isNetworkError || www.isHttpError)
-			{
-				Debug.Log(www.error);
+			if (www.isNetworkError || www.isHttpError) {
+				Debug.Log (www.error);
+			} else if (successCallback != null) {
+				successCallback (www.downloadHandler.text);
+			} else {
+				Debug.Log (www.downloadHandler.text);
 			}
-			else
-			{
-				if (successCallback != null )
-				{
-					successCallback(www.downloadHandler.text);
-				}
-			}
-
 		}
 	}
 
-	public IEnumerator SendHighscore(string name, Dictionary<string, int> highscore)
+	public void GetHighscores(Action<string> successCallback)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("action", "getHighscore");
+		StartCoroutine (SendPostRequest(postUrl, form, successCallback));
+	}
+
+	public void SendHighscore(string name, Dictionary<string, int> highscore)
 	{
 		int wave = highscore ["wave"];
 		int time = highscore ["time"];
 		int mobs = highscore ["mobs"];
-
 		string hash = Md5Sum(name + wave + time + mobs + secretKey);
 
 		WWWForm form = new WWWForm();
-		form.AddField("action", "Highscore");
+		form.AddField("action", "setHighscore");
 		form.AddField("name", name);
 		form.AddField("wave", wave);
 		form.AddField("time", time);
@@ -101,48 +111,34 @@ public class Highscores : MonoBehaviour {
 		StartCoroutine (SendPostRequest(postUrl, form));
 	}
 
-	public void GetHighscores()
-	{
-		WWWForm form = new WWWForm();
-		form.AddField("action", "getHighscore");
-		StartCoroutine (SendPostRequest(postUrl, form, processHighscoreResult));
-	}
-
-//	public void GetAllHighscore() {
-//
-//		// bau hash
-//		string hash = "";
-//		// Hash128 hash
-//
-//		// baue mir den post string zusammen
-//		string postUrlGetHighscore = addScoreURL + "?GetHighscore" + "&hash=" + hash;
-//
-//		// schicke an script online auf webbseite
-//		WWW www = new WWW(postUrlGetHighscore); //GET data is sent via the URL
-//
-//		// empfange daten
-//
-////		while(!www.isDone && string.IsNullOrEmpty(www.error)) {
-////			gameObject.guiText.text = "Loading... " + www.Progress.ToString("0%"); //Show progress
-////			yield return null;
-////		}
-//
-////		if(string.IsNullOrEmpty(www.error)) gameObject.guiText.text = www.text;
-////		else Debug.LogWarning(www.error);
-//
-//		// zeige daten in spietabelle an
-//		AddPlayerToHighscore();
-//	}
-
-	private void AddPlayerToHighscore() {
-
-	}
-
 	private void processHighscoreResult(String result)
 	{
 		Debug.Log (result);
 	}
 
 
+	private void AddPlayerToHighscore() {
+
+	}
 		
+	// TODO: Util function - can be moved?
+	public  string Md5Sum(string strToEncrypt)
+	{
+		System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
+		byte[] bytes = ue.GetBytes(strToEncrypt);
+
+		// encrypt bytes
+		System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+		byte[] hashBytes = md5.ComputeHash(bytes);
+
+		// Convert the encrypted bytes back to a string (base 16)
+		string hashString = "";
+
+		for (int i = 0; i < hashBytes.Length; i++)
+		{
+			hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
+		}
+
+		return hashString.PadLeft(32, '0');
+	}
 }
