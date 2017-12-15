@@ -15,6 +15,7 @@ TagManager:
   - Mob
   - TowerSpot
   - YellowCrystal
+  - GameManager
   layers:
   - Default
   - TransparentFX

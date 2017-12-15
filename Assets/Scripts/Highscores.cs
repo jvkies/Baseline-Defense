@@ -9,35 +9,42 @@ using System;
 
 public class Highscores : MonoBehaviour {
 
-	public string addScoreURL;
+	//public string addScoreURL;
 
 	private float waitBetweenSteps = 0.05f;
-
 	// TODO: This should probably be in a config file
-	private string postUrl = "http://lmt.jovin.de/BD_db_connector.php";
+	private string postUrl = "http://www.jovin.de/gaming/BaselineDefenseHighscores.php";
 	private string secretKey = "abc123";
 
-	public float countTime = 3f;				// time the counter should be running
+	public float countTime = 3f;				// time the counting animation should be running
+	public string errorText = "Sorry!  Could  not  retrieve  highscores.";
 	public Text waveHighscore;
 	public Text timeHighscore;
 	public Text mobsHighscore;
+	public GameObject statusText;
+	public GameObject playerStatHeadline;
+	public GameObject playerStatPanel;
+	public GameObject highscoreContainer;
+	public Button submitButton;
+	public Text submitButtonText;
+	public Text playernameInput;
+	public Dictionary<string, int> test;			// "wave" -> 18, "time" -> 236
 
 	// Use this for initialization
 	void Start () {
 
-		//timeHighscore.text = GameManager.instance.highscore ["time"].ToString ();
+		if (GameObject.FindWithTag ("GameManager") != null) {
+			StartCoroutine (CountTo (GameManager.instance.highscore ["wave"], waveHighscore));
+			StartCoroutine (CountTo (GameManager.instance.highscore ["time"], timeHighscore, true));
+			StartCoroutine (CountTo (GameManager.instance.highscore ["mobs"], mobsHighscore));
+		}
 
-//		StartCoroutine(CountTo(GameManager.instance.highscore ["wave"],waveHighscore));
-//		StartCoroutine(CountTo(GameManager.instance.highscore ["time"],timeHighscore,true));
-//		StartCoroutine(CountTo(GameManager.instance.highscore ["mobs"],mobsHighscore));
-
-
-//		Example SendHighscore Call
-//		Dictionary<string, int> hs = new Dictionary<string, int> ();
-//		hs.Add ("wave", 10);
-//		hs.Add ("time", 1500);
-//		hs.Add ("mobs", 500);
-//		SendHighscore ("cray", hs);
+		//		Example SendHighscore Call
+		//		Dictionary<string, int> hs = new Dictionary<string, int> ();
+		//		hs.Add ("wave", 10);
+		//		hs.Add ("time", 1500);
+		//		hs.Add ("mobs", 500);
+		//		SendHighscore ("cray", hs);
 
 //		Example GetHighscore Call
 		GetHighscores (processHighscoreResult);
@@ -51,14 +58,19 @@ public class Highscores : MonoBehaviour {
 
 		while (currentCount <= countTo) {
 			if (isTime) {
-				TimeSpan t = TimeSpan.FromSeconds (currentCount);
-				textField.text = string.Format ("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+				textField.text = FormatSecondsToReadableTime(currentCount);
 			} else {
 				textField.text = currentCount.ToString ();
 			}
 			currentCount += 1;
 			yield return new WaitForSeconds (waitBetweenSteps);
 		}
+	}
+
+	private string FormatSecondsToReadableTime (int seconds) {
+		TimeSpan t = TimeSpan.FromSeconds (seconds);
+		return string.Format ("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
+
 	}
 
 	public void TransitionToScene ( string sceneName) {
@@ -74,9 +86,11 @@ public class Highscores : MonoBehaviour {
 	{
 		using (UnityWebRequest www = UnityWebRequest.Post(url, form))
 		{
-			yield return www.Send();
+			yield return www.SendWebRequest();
 
 			if (www.isNetworkError || www.isHttpError) {
+				statusText.SetActive (true);
+				statusText.GetComponentInChildren<Text> ().text = errorText;
 				Debug.Log (www.error);
 			} else if (successCallback != null) {
 				successCallback (www.downloadHandler.text);
@@ -93,11 +107,15 @@ public class Highscores : MonoBehaviour {
 		StartCoroutine (SendPostRequest(postUrl, form, successCallback));
 	}
 
-	public void SendHighscore(string name, Dictionary<string, int> highscore)
+	public void SendHighscore()
 	{
-		int wave = highscore ["wave"];
-		int time = highscore ["time"];
-		int mobs = highscore ["mobs"];
+		submitButton.interactable = false;
+		submitButtonText.text = "... sending ...";
+
+		string name = playernameInput.text;
+		int wave = GameManager.instance.highscore ["wave"];
+		int time = GameManager.instance.highscore ["time"];
+		int mobs = GameManager.instance.highscore ["mobs"];
 		string hash = Md5Sum(name + wave + time + mobs + secretKey);
 
 		WWWForm form = new WWWForm();
@@ -106,19 +124,59 @@ public class Highscores : MonoBehaviour {
 		form.AddField("wave", wave);
 		form.AddField("time", time);
 		form.AddField("mobs", mobs);
+		form.AddField("version", "0.0.0");
 		form.AddField("hash", hash);
 
-		StartCoroutine (SendPostRequest(postUrl, form));
+		StartCoroutine (SendPostRequest(postUrl, form, sendHighscoreCallback));
 	}
 
 	private void processHighscoreResult(String result)
 	{
-		Debug.Log (result);
+		ClearHighscoreContainer ();
+
+		Debug.Log (fixJson(result));
+		highscoreData[] allPlayerHighscores = JsonHelper.FromJson<highscoreData>(fixJson(result));
+
+		statusText.SetActive (false);
+		Instantiate (playerStatHeadline, highscoreContainer.transform);
+
+		foreach (highscoreData playerData in allPlayerHighscores) {
+			AddPlayerToHighscore (playerData.playername, playerData.wave, playerData.time, playerData.mobs);
+		}
 	}
 
+	private void sendHighscoreCallback(string result) {
+		Debug.Log (result);
+		if (result == "1") {
+			submitButtonText.text =  "Success!";
+		}
+		GetHighscores (processHighscoreResult);
 
-	private void AddPlayerToHighscore() {
+	}
 
+	private void ClearHighscoreContainer() {
+		for (int i=0; i<highscoreContainer.transform.childCount; i++) {
+			if (highscoreContainer.transform.GetChild (i).name != "StatusText") {
+				Destroy (highscoreContainer.transform.GetChild (i).gameObject);
+			}
+		}
+	}
+
+	private void AddPlayerToHighscore(string name, string wave, string time, string mobs) {
+		
+		GameObject playerScore = Instantiate (playerStatPanel, highscoreContainer.transform);
+		Text[] playerStats = playerScore.GetComponentsInChildren<Text> ();		// TODO: there need to be a better way to access these
+		playerStats[0].text = name;
+		playerStats[1].text = mobs;
+		playerStats[2].text = FormatSecondsToReadableTime(int.Parse(time));
+		playerStats[3].text = wave;
+	}
+
+	string fixJson(string value)
+	{
+		// stupid JsonHelper workaround with items...
+		value = "{\"Items\":" + value + "}";
+		return value;
 	}
 		
 	// TODO: Util function - can be moved?

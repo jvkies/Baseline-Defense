@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using System.Reflection;
 using Random = UnityEngine.Random;
 
-[assembly:AssemblyVersion ("1.0.*")]
+//[assembly:AssemblyVersion ("1.0.*")]
 
 public class GameManager : MonoBehaviour {
 	
@@ -93,37 +93,39 @@ public class GameManager : MonoBehaviour {
 		// InitMusic ();  								// this works, but music files are too large for github, skipping
 
 		InitTowerAndMobData ();
-		Debug.Log(Assembly.GetExecutingAssembly ().GetName ().Version.ToString ());
+		//Debug.Log(Assembly.GetExecutingAssembly ().GetName ().Version.ToString ());
 			
 	}
 		
 	void Update() {
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-			if (isDragging == true) {
-				isDragging = false;
-				Destroy (draggedTower);
-			} else {
-				menuScript.ToggleEscapeMenu();
+		if (SceneManager.GetActiveScene ().name == "Game") {
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				if (isDragging == true) {
+					isDragging = false;
+					Destroy (draggedTower);
+				} else {
+					menuScript.ToggleEscapeMenu ();
+				}
 			}
-		}
-		if (Input.GetKeyDown (KeyCode.P)) {
-			StopDragging ();
-			menuScript.ToggleEscapeMenu();
-		}
-		if (Input.GetMouseButtonDown (1) && isDragging) {
-			StopDragging ();
-		}	
-		if (Input.GetKeyDown (KeyCode.Alpha1)) {
-			if (isDragging) {
+			if (Input.GetKeyDown (KeyCode.P)) {
 				StopDragging ();
+				menuScript.ToggleEscapeMenu ();
 			}
-			menuScript.BuildTower ("bullettower1");
-		}
-		if (Input.GetKeyDown (KeyCode.Alpha2)) {
-			if (isDragging) {
+			if (Input.GetMouseButtonDown (1) && isDragging) {
 				StopDragging ();
+			}	
+			if (Input.GetKeyDown (KeyCode.Alpha1)) {
+				if (isDragging) {
+					StopDragging ();
+				}
+				menuScript.BuildTower ("bullettower1");
 			}
-			menuScript.BuildTower ("rocktower1");
+			if (Input.GetKeyDown (KeyCode.Alpha2)) {
+				if (isDragging) {
+					StopDragging ();
+				}
+				menuScript.BuildTower ("rocktower1");
+			}
 		}
 
 	}
@@ -144,7 +146,7 @@ public class GameManager : MonoBehaviour {
 		souls = 141;
 
 		menuScript.UpdateSouls (souls.ToString ());
-		Spawn2Souls (souls, yellowCrystal.transform.position);
+		SpawnSouls (souls, yellowCrystal.transform.position);
 	}
 
 	private void InitTowerAndMobData() {
@@ -230,7 +232,7 @@ public class GameManager : MonoBehaviour {
 					Debug.Log ("Error: position parameter of UpdateSouls can't be empty / null when increading soul amount");
 				}
 
-				Spawn2Souls(amount, position.transform.position);
+				SpawnSouls(amount, position.transform.position);
 			}
 
 			if (souls <= 0) {
@@ -250,7 +252,7 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	public void Spawn2Souls(int amount, Vector3 position) {
+	public void SpawnSouls(int amount, Vector3 position) {
 		Vector3 offsetPos = new Vector3(0,0,0);
 
 		for (int i = 0; i < amount; i++) {

@@ -26,7 +26,8 @@ public class MainMenu : MonoBehaviour {
 		//sceneToLoad = sceneName;
 		//newGameBlendImage.gameObject.SetActive(true);
 		//isTransitioning = true;
-		GameManager.instance.PlaySfx (newGameSfx);
+
+		//GameManager.instance.PlaySfx (newGameSfx);
 
 		Invoke ("LoadSceneLazy", fadeTime);
 		StartCoroutine( FadeOut ());

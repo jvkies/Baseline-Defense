@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 82681299942311430}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -220,7 +220,7 @@ MonoBehaviour:
   isTowerSelected: 0
   isGameLost: 0
   musicFolder: music by neocrey
-  startGameTime: 0
+  startWaveTime: 0
   waveID: 0
   draggedTower: {fileID: 0}
   selectedTower: {fileID: 0}
