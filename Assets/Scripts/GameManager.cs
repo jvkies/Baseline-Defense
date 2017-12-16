@@ -157,14 +157,15 @@ public class GameManager : MonoBehaviour {
 		tower.Add ("bullettower3", new Tower ("bullettower3", "Bullet Tower 3", "bullettower4",  48,  58, 12, 3,   2f,    3, 0, 8, new Color32 (150, 150, 50, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
 		tower.Add ("bullettower4", new Tower ("bullettower4", "Bullet Tower 4", "bullettower5", 106, 182, 24, 4, 2.5f,    3, 0, 8, new Color32 (255, 20, 20, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
 		tower.Add ("bullettower5", new Tower ("bullettower5", "Bullet Tower 5", null, 			290,   0, 60, 5,   3f,    5, 0, 8, new Color32 (220, 220, 50, 255), new Vector2 (0.05f, 0.05f), bullettowerHeadWhite));
-		tower.Add ("rocktower1", new Tower ("rocktower1", "Rock Tower 1", "rocktower2",  20,  16,   6, 1, 0.333f, 4,  0.7f, 4, new Color32 (0, 0, 0, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		tower.Add ("rocktower2", new Tower ("rocktower2", "Rock Tower 2", "rocktower3",  36,  28,  12, 2, 0.333f, 4, 0.75f, 4, new Color32 (50, 50, 220, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		tower.Add ("rocktower3", new Tower ("rocktower3", "Rock Tower 3", "rocktower4",  64,  51,  24, 3, 0.333f, 4,  0.8f, 4, new Color32 (150, 150, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		tower.Add ("rocktower4", new Tower ("rocktower4", "Rock Tower 4", "rocktower5", 116, 145,  48, 4, 0.333f, 4, 0.85f, 4, new Color32 (255, 20, 20, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
-		tower.Add ("rocktower5", new Tower ("rocktower5", "Rock Tower 5", null, 		261,   0, 120, 5, 0.333f, 5,    1f, 4, new Color32 (220, 220, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
+		tower.Add ("rocktower1", new Tower ("rocktower1", "Rock Tower 1", "rocktower2",  20,  16,   6, 1, 0.333f, 4,  0.5f, 4, new Color32 (0, 0, 0, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
+		tower.Add ("rocktower2", new Tower ("rocktower2", "Rock Tower 2", "rocktower3",  36,  28,  12, 2, 0.333f, 4, 0.55f, 4, new Color32 (50, 50, 220, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
+		tower.Add ("rocktower3", new Tower ("rocktower3", "Rock Tower 3", "rocktower4",  64,  51,  24, 3, 0.333f, 4,  0.6f, 4, new Color32 (150, 150, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
+		tower.Add ("rocktower4", new Tower ("rocktower4", "Rock Tower 4", "rocktower5", 116, 145,  48, 4, 0.333f, 4, 0.65f, 4, new Color32 (255, 20, 20, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
+		tower.Add ("rocktower5", new Tower ("rocktower5", "Rock Tower 5", null, 		261,   0, 120, 5, 0.333f, 5,  0.8f, 4, new Color32 (220, 220, 50, 255), new Vector2 (0.15f, 0.15f), rocktowerHeadWhite));
 
 		mobs = new Dictionary<string, Mob>();
 		mobs.Add ("blob", 		new Mob ("blob", "Blob", 			 	 	0,  1,     1,  10,  10, 0, 0, 1, blob));
+		mobs.Add ("groupblob", 	new Mob ("groupblob", "Group Blob", 	 	0,  1,     1,  10,  10, 0, 0, 1, blob));
 		mobs.Add ("fastblob",	new Mob ("fastblob", "Fast Blob", 	 	 	0,  1,  1.5f,   8,   8, 0, 0, 1, fastBlob));
 		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	0,  1, 0.7f,   10,   10, 1, 0, 1, armorBlob));
 		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 5, blobBoss));
@@ -239,7 +240,9 @@ public class GameManager : MonoBehaviour {
 			if (souls <= 0) {
 				// Player lost the game
 
-				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startWaveTime);
+				Debug.Log ("start wave time:" + startWaveTime);
+				Debug.Log ("time.time:" + Time.time);
+				GameManager.instance.highscore["time"] = (int)(Time.time - startWaveTime);
 
 				souls = 0;
 				isGameLost = true;

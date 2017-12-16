@@ -27,8 +27,10 @@ public class Spawner : MonoBehaviour {
 	public GameObject buttonEffect;
 	public GameObject startWaveContainer;
 	public AnimationCurve colorCurve;
-	public Dictionary<int, List<GameObject>> waveMob;	// waveId -> mobGameObject[], maps the waveID to all mob Instances in this wave
+	// TODO: store all data about a wave in one smart data structure
+	public Dictionary<int, List<GameObject>> waveMob;	// waveID -> mobGameObject[], maps the waveID to all mob Instances in this wave
 	public Dictionary<int, float> waveTime;				// waveID -> Time.time when this wave was started
+	public Dictionary<int, float> waveSurvivedHealth;	// waveID -> total Health of mobs who survived
 
 	// Use this for initialization
 	void Start () {
@@ -38,6 +40,7 @@ public class Spawner : MonoBehaviour {
 
 		waveMob = new Dictionary<int, List<GameObject>>();
 		waveTime = new Dictionary<int, float>();
+		waveSurvivedHealth = new Dictionary<int, float>();
 	}
 
 	// Update is called once per frame
@@ -104,12 +107,7 @@ public class Spawner : MonoBehaviour {
 		}
 
 		while (waveMob.ContainsKey(waveID) && waveMob[waveID].Count != 0) {
-		//while (enemyContainer.transform.childCount != 0) {
 			yield return new WaitForSeconds(1);
-		//	if (waveMob.ContainsKey(waveID))
-		//		Debug.Log ("mobs in wave: " + waveID + " " + waveMob [waveID].Count + " (total waves: "+waveMob.Count.ToString()+")");
-		//	else
-		//		Debug.Log("wave "+waveID+" cleared");
 		}
 			
 		if (GameManager.instance.isGameLost == false) {
@@ -118,9 +116,9 @@ public class Spawner : MonoBehaviour {
 			payInterest (GetInterest(waveID));
 		
 			if (waveID == maxWaveAmount) {
+				// Player wins the game
+
 				startWaveContainer.SetActive (false);
-//				if (GameManager.instance.isGameLost != true) { // TODO: checked twice?
-					// Player wins the game
 
 				GameManager.instance.highscore["time"] = (int)(Time.time - GameManager.instance.startWaveTime);
 
@@ -207,7 +205,7 @@ public class Spawner : MonoBehaviour {
 
 	private int GetInterest ( int waveID ) {
 		int interest = baseSoulInterest + waveID - 1;
-		return interest + CallWaveEarlyBonusMoney (waveID, interest);
+		return  Mathf.RoundToInt ((interest + CallWaveEarlyBonusMoney (waveID, interest)) * DamageDoneMultiplier(waveID));
 	}
 
 	private int CallWaveEarlyBonusMoney(int waveID, int interest) {
@@ -224,8 +222,20 @@ public class Spawner : MonoBehaviour {
 		} else {
 			return 0;
 		}
+	}
 
+	private float DamageDoneMultiplier( int waveID) {
+		// returns a percent multiplier (e.g. 0.76) of how much damage was dealt in the last round
+		return (TotalWaveHealth(waveID) - waveSurvivedHealth[waveID]) / TotalWaveHealth(waveID);
+	}
 
+	private float TotalWaveHealth( int waveID) {
+		string mobID = NextMob (waveID);
+		int mobPerWave = MobsPerWave(waveID, mobID); 
+		Debug.Log (mobID);
+		Mob mobData = ScaleMob (GameManager.instance.mobs [mobID].Copy (), waveID);
+
+		return mobPerWave * mobData.maxHealth;
 	}
 
 	public void NextWave() {
@@ -239,6 +249,7 @@ public class Spawner : MonoBehaviour {
 
 			waveMob.Add (_waveID, new List<GameObject> ());
 			waveTime.Add (_waveID, Time.time);
+			waveSurvivedHealth.Add (_waveID, 0);
 
 			menuController.SetWaveButtonText ("Start Wave " + (_waveID + 1).ToString ());
 

@@ -79,6 +79,8 @@ public class MobController : MonoBehaviour {
 	private void KillMob(bool isLeaking = false) {
 		if (isLeaking) {
 			GameManager.instance.UpdateSouls (-mobData.mobHeartDamage);
+			spawnScript.waveSurvivedHealth [mobData.waveID] += mobData.health;
+
 		} else {
 			GameManager.instance.UpdateSouls (mobData.moneyWorth, gameObject);
 
