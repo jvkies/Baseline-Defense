@@ -25,6 +25,7 @@ public class Highscores : MonoBehaviour {
 	public GameObject playerStatHeadline;
 	public GameObject playerStatPanel;
 	public GameObject highscoreContainer;
+	public GameObject submitPanel;
 	public Button submitButton;
 	public Text submitButtonText;
 	public Text playernameInput;
@@ -34,9 +35,13 @@ public class Highscores : MonoBehaviour {
 	void Start () {
 
 		if (GameObject.FindWithTag ("GameManager") != null) {
-			StartCoroutine (CountTo (GameManager.instance.highscore ["wave"], waveHighscore));
-			StartCoroutine (CountTo (GameManager.instance.highscore ["time"], timeHighscore, true));
-			StartCoroutine (CountTo (GameManager.instance.highscore ["mobs"], mobsHighscore));
+			if (GameManager.instance.highscore != null) {
+				StartCoroutine (CountTo (GameManager.instance.highscore ["wave"], waveHighscore));
+				StartCoroutine (CountTo (GameManager.instance.highscore ["time"], timeHighscore, true));
+				StartCoroutine (CountTo (GameManager.instance.highscore ["mobs"], mobsHighscore));
+			} else {
+				submitPanel.SetActive (false);
+			}
 		}
 			
 		GetHighscores (processHighscoreResult);

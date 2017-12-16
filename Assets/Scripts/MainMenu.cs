@@ -39,6 +39,10 @@ public class MainMenu : MonoBehaviour {
 		GameManager.instance.LoadScene ("Game");
 	}
 
+	public void ToHighscores() {
+		GameManager.instance.highscore = null;
+		GameManager.instance.LoadScene ("Highscores");
+	}
 	public void ExitGame() {
 		Application.Quit ();
 	}

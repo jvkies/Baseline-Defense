@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212802883763693964}
   - component: {fileID: 114392484831597008}
   m_Layer: 0
-  m_Name: Background
+  m_Name: Pathfinding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

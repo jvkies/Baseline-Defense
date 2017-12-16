@@ -94,7 +94,9 @@ public class MobController : MonoBehaviour {
 		// if the last mob was removed, remove the wave from waveMob Dict
 		if (spawnScript.waveMob [mobData.waveID].Count == 0) {
 			Debug.Log("wave "+mobData.waveID+" clear");
-			GameManager.instance.highscore["wave"] = mobData.waveID;
+			if (!GameManager.instance.isGameLost) {
+				GameManager.instance.highscore ["wave"] = mobData.waveID;
+			}
 			spawnScript.waveMob.Remove (mobData.waveID);
 		}
 
