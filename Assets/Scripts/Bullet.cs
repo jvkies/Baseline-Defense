@@ -51,6 +51,7 @@ public class Bullet : MonoBehaviour {
 		// Applies Damage to Non AoE Target
 		else 
 		{
+			// TODO: can cause error when the target is already dead
 			target.GetComponent<MobController> ().TakeDamage (damage);
 		}
 			

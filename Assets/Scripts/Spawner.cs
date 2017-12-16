@@ -257,16 +257,16 @@ public class Spawner : MonoBehaviour {
 			GameManager.instance.UpdateSouls (interest, GameManager.instance.yellowCrystal);
 			Debug.Log("payed interest: " + interest);
 			interestGain.text = "+ " + interest;
-			interestGain.enabled = true;
+			interestGain.color = new Color(interestGain.color.r, interestGain.color.g, interestGain.color.b, 1);
 
-			StartCoroutine(FadeTextToFullAlpha(1f, interestGain));
+			//StartCoroutine(FadeTextToFullAlpha(1f, interestGain));
 			StartCoroutine(hideInterestDelayed());
 		}
 	}
 
 	private IEnumerator hideInterestDelayed()
 	{
-		yield return new WaitForSecondsRealtime(3);
+		yield return new WaitForSecondsRealtime(2);
 		StartCoroutine(FadeTextToZeroAlpha(1f, interestGain));
 	}
 
