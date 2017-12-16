@@ -16,6 +16,7 @@ public class Spawner : MonoBehaviour {
 	private MenuController menuController;
 	private Image buttonEffectImage;
 
+	public Text interestGain;
 	public int baseSoulInterest = 12;					// base amount of souls added each wave (interest), total amount is baseAmoun+waveid-1
 	public int bonusInterestTime = 24;					// time the player has to call the wave early, calling a wave early in this seconds gives bonus interest
 	public int maxWaveAmount = 50;						// maximum number of waves until you win
@@ -116,10 +117,8 @@ public class Spawner : MonoBehaviour {
 		if (GameManager.instance.isGameLost == false) {
 
 			// Give interest money to player after survival
-			if (GameManager.instance.waveID != maxWaveAmount) {
-				GameManager.instance.UpdateSouls (GetInterest(waveID), GameManager.instance.yellowCrystal);
-				Debug.Log("payed interest: "+ GetInterest(waveID));
-			}
+			payInterest (GetInterest(waveID));
+		
 			if (waveID == maxWaveAmount) {
 				startWaveContainer.SetActive (false);
 //				if (GameManager.instance.isGameLost != true) { // TODO: checked twice?
@@ -245,5 +244,45 @@ public class Spawner : MonoBehaviour {
 			StartCoroutine (StartWave (_waveID));
 		}
 
+	}
+
+	private void payInterest(int interest)
+	{
+		if (GameManager.instance.waveID != maxWaveAmount) 
+		{
+			GameManager.instance.UpdateSouls (interest, GameManager.instance.yellowCrystal);
+			Debug.Log("payed interest: " + interest);
+			interestGain.text = "+ " + interest;
+			interestGain.enabled = true;
+
+			StartCoroutine(FadeTextToFullAlpha(1f, interestGain));
+			StartCoroutine(hideInterestDelayed());
+		}
+	}
+
+	private IEnumerator hideInterestDelayed()
+	{
+		yield return new WaitForSecondsRealtime(3);
+		StartCoroutine(FadeTextToZeroAlpha(1f, interestGain));
+	}
+
+	public IEnumerator FadeTextToFullAlpha(float t, Text i)
+	{
+		i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+		while (i.color.a < 1.0f)
+		{
+			i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a + (Time.deltaTime / t));
+			yield return null;
+		}
+	}
+
+	public IEnumerator FadeTextToZeroAlpha(float t, Text i)
+	{
+		i.color = new Color(i.color.r, i.color.g, i.color.b, 1);
+		while (i.color.a > 0.0f)
+		{
+			i.color = new Color(i.color.r, i.color.g, i.color.b, i.color.a - (Time.deltaTime / t));
+			yield return null;
+		}
 	}
 }
