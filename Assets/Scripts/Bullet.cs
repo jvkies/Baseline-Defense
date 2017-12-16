@@ -31,6 +31,8 @@ public class Bullet : MonoBehaviour {
 		 
 	void OnTriggerEnter2D(Collider2D collider2d) {
 		// Calculates Targets for AoE Damage and applies Damage
+		// TODO: bullet can possibly collide with another bullet? Bother are triggers
+		// TODO: collides with the first mob it hits, not neccecary the actual target
 		if (aoeRange != 0) 
 		{
 			StartCoroutine( BlastEffect (aoeEffectPrefab, transform.position, aoeRange, 0.2f));

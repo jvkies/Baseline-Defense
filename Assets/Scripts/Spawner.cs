@@ -251,7 +251,7 @@ public class Spawner : MonoBehaviour {
 			waveTime.Add (_waveID, Time.time);
 			waveSurvivedHealth.Add (_waveID, 0);
 
-			menuController.SetWaveButtonText ("Start Wave " + (_waveID + 1).ToString ());
+			menuController.SetWaveButtonText ((_waveID + 1).ToString ());
 
 			//startWaveContainer.SetActive (false);
 			StartCoroutine (StartWave (_waveID));
