@@ -49,8 +49,6 @@ public class Spawner : MonoBehaviour {
 			// TODO: only if the next wave should be able to be called..
 			NextWave ();
 		}
-
-
 	}
 
 	public Transform GetRandomSpawnSpot() {
@@ -161,8 +159,8 @@ public class Spawner : MonoBehaviour {
 		if (waveID > 40) {
 			if (_mob.armor != 0)
 				_mob.armor += 1;
-			_mob.health += _mob.health * 0.3f;
-			_mob.maxHealth += _mob.maxHealth * 0.3f;
+			_mob.health += _mob.health * 0.4f;
+			_mob.maxHealth += _mob.maxHealth * 0.4f;
 		}
 		if (waveID > 50) {
 			if (_mob.armor != 0)
