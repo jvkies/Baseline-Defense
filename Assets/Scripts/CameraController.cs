@@ -3,93 +3,89 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
+	private Vector3 dragOrigin;
+	private Camera cam;
+
 	public float panSpeed = 5f;
 	public float panBorderThickness = 10f;
+	public float scrollSpeed = 5f;
 
-	public float scrollSpeed = 1f;
+	public float gameFieldSizeY = 8.25f;		// not in unity meters, in orthographic camera size (unity meters / 2)
+	public float gameFieldSizeX = 10.75f;		// not in unity meters, in orthographic camera size (unity meters / 2)
+	public float gameFieldOffsetY = 0.25f;		// game field is offset y for a bit
+
+	public float menuOffset = 4f;
+
 	public float minZoom = 3f;
 	public float maxZoom = 6f;
 
-	public float minYzoomIn = -5f;
-	public float minYzoomOut = -1.93f;
+	void Start() {
+		cam = Camera.main;
+		Debug.Log ("Aspect ratio: "+cam.aspect);
+	}
 
-	public float maxYzoomIn = 5.46f;
-	public float maxYzoomOut = 2.4f;
-
-	public float minXzoomIn = -5f;
-	public float minXzoomOut = 0.82f;
-
-	public float maxXzoomIn = 6.64f;
-	public float maxXzoomOut = 2.5f;
-
-	// Update is called once per frame
 	void LateUpdate () {
 
+		// deactivate script when lost
 		if (GameManager.instance.isGameLost)
 		{
 			this.enabled = false;
 			return;
 		}
 
-		if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - panBorderThickness)
-		{
-			if (transform.position.y < lerpZoom(GetComponent<Camera> ().orthographicSize, maxYzoomIn, maxYzoomOut))
-				transform.Translate(Vector3.up * panSpeed * Time.deltaTime, Space.World);
-		}
-		if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness)
-		{
-			if (transform.position.y > lerpZoom(GetComponent<Camera> ().orthographicSize, minYzoomIn, minYzoomOut))
-				transform.Translate(Vector3.down * panSpeed * Time.deltaTime, Space.World);
-		}
-		if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - panBorderThickness)
-		{
-			if (transform.position.x < lerpZoom(GetComponent<Camera> ().orthographicSize, maxXzoomIn, maxXzoomOut))
-				transform.Translate(Vector3.right * panSpeed * Time.deltaTime, Space.World);
-		}
-		if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness)
-		{
-			if (transform.position.x > lerpZoom(GetComponent<Camera> ().orthographicSize, minXzoomIn, minXzoomOut))
-				transform.Translate(Vector3.left * panSpeed * Time.deltaTime, Space.World);
-		}
-
+		// zoom
 		float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
-		float newSize = GetComponent<Camera> ().orthographicSize += scroll;
-		GetComponent<Camera> ().orthographicSize = Mathf.Clamp(newSize,minZoom,maxZoom);
+		float zoom = GetComponent<Camera> ().orthographicSize;
+		float newSize = zoom += scroll;
+		GetComponent<Camera> ().orthographicSize = Mathf.Clamp(newSize, minZoom, maxZoom);
 
-		//Vector3 pos = transform.position;
-		//pos.y -= scroll * 1000 * scrollSpeed * Time.deltaTime;
-		//pos.y = Mathf.Clamp(pos.y, minY, maxY);
+		// click and drag
+		if( Input.GetMouseButtonDown( 0 ) ) {
+			dragOrigin = new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0 );
+			dragOrigin = cam.ScreenToWorldPoint( dragOrigin );
+		};
 
-		//transform.position = pos;
-		//Mathf.clam
+		if( Input.GetMouseButton( 0 ) ) {
+			Vector3 currentPos = new Vector3( Input.mousePosition.x, Input.mousePosition.y, 0 );
+			currentPos = cam.ScreenToWorldPoint( currentPos );
+			Vector3 movePos = dragOrigin - currentPos;
+
+			transform.position += ( movePos );
+		};
+
+		Vector3 pos = transform.position;
+
+		// moving with keys and borders
+		if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - panBorderThickness) {
+			pos.y += panSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= panBorderThickness) {
+			pos.y -= panSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - panBorderThickness) {
+			pos.x += panSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x <= panBorderThickness) {
+			pos.x -= panSpeed * Time.deltaTime;
+		}
+
+		pos.y = Mathf.Clamp (pos.y, lerpZoom(-limitY(zoom), -limitY(zoom), zoom) + gameFieldOffsetY, lerpZoom(limitY(zoom), limitY(zoom), zoom) + gameFieldOffsetY);
+		pos.x = Mathf.Clamp (pos.x, lerpZoom(-limitX(zoom), -limitX(zoom), zoom), lerpZoom(limitX(zoom), limitX(zoom) + menuOffset, zoom));
+
+		transform.position = pos;
+
+	}
+		
+	private float limitY(float zoom) {
+		return gameFieldSizeY - zoom;
 	}
 
-	private float lerpZoom ( float _zoom, float _zoomIn, float _zoomOut) {
-		return Mathf.Lerp(_zoomIn, _zoomOut, (_zoom/3)-1);
+	private float limitX(float zoom) {
+		return gameFieldSizeX - (zoom * cam.aspect);
 	}
-
-
-	private float zoomToMaxY ( float _zoom) {
-		return Mathf.Lerp(maxYzoomIn, maxYzoomOut, (_zoom/3)-1);
+		
+	private float lerpZoom (float _zoomIn, float _zoomOut, float _zoom) {
+		return Mathf.Lerp(_zoomIn, _zoomOut, (_zoom-minZoom) / (maxZoom - minZoom));
 	}
-
-	private float zoomToMinY ( float _zoom) {
-		return Mathf.Lerp(minYzoomIn, minYzoomOut, (_zoom/3)-1);
-	}
-
-	private float zoomToMinX ( float _zoom) {
-		return Mathf.Lerp(minXzoomIn, minXzoomOut, (_zoom/3)-1);
-	}
-
 
 }
-
-
-// y 5.46 : 3
-// y 2.5 : 6
-
-// y -2 : 6
-// y -5 : 3
-
-// x 0.82 : 6
-// x -5 : 3
