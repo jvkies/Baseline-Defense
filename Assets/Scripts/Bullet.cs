@@ -5,7 +5,6 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	private Transform target;
-	private Transform enemyContainer;
 
 	public float aoeRange = 0.2f;
 
@@ -14,7 +13,6 @@ public class Bullet : MonoBehaviour {
 	public float damage;
 
 	void Start() {
-		enemyContainer = GameObject.FindWithTag ("EnemyContainer").transform;
 	}
 
 	// Update is called once per frame
