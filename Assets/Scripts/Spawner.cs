@@ -217,8 +217,12 @@ public class Spawner : MonoBehaviour {
 			float percentBonus = 1 - ((waveTime [waveID+1] - waveTime [waveID]) / bonusInterestTime);
 			//Debug.Log ("called early after: "+(waveTime [waveID+1] - waveTime [waveID])+" seconds");
 			//Debug.Log ("percent bonus: " + percentBonus);
-			//Debug.Log("bonus interest: "+Mathf.RoundToInt( interest * percentBonus)+" (of interest: "+interest+")");			
-			return Mathf.RoundToInt (interest * percentBonus);
+			//Debug.Log("bonus interest: "+Mathf.RoundToInt( interest * percentBonus)+" (of interest: "+interest+")");
+			if (percentBonus <= 0) {
+				return 0;
+			} else {
+				return Mathf.RoundToInt (interest * percentBonus);
+			}
 		} else {
 			return 0;
 		}
