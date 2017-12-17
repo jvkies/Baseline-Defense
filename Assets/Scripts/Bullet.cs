@@ -35,8 +35,13 @@ public class Bullet : MonoBehaviour {
 		// TODO: collides with the first mob it hits, not neccecary the actual target
 		if (aoeRange != 0) 
 		{
-			StartCoroutine( BlastEffect (aoeEffectPrefab, transform.position, aoeRange, 0.2f));
+			//StartCoroutine( BlastEffect (aoeEffectPrefab, transform.position, aoeRange, 0.2f));
+			GameObject beGO = Instantiate (aoeEffectPrefab, transform.position, Quaternion.identity);
+			beGO.transform.localScale = new Vector3 (ScaleBlastradiusVisual(aoeRange), ScaleBlastradiusVisual(aoeRange), 1);
+
 			Collider2D[] colliders = Physics2D.OverlapCircleAll (transform.position, aoeRange);
+			// TODO: colliders contains the TowerSpot colliders aswell
+
 			Debug.Log ("enemys hit: " + colliders.Length);
 			for (int i = 0; i < colliders.Length; i++) 
 			{
@@ -57,27 +62,7 @@ public class Bullet : MonoBehaviour {
 		target.GetComponent<MobController> ().mobData.incomingDmg -= damage;
 		Destroy (gameObject);
 	}
-
-	private IEnumerator BlastEffect(GameObject prefab, Vector3 pos, float radius, float duration) {
-		GameObject beGO = Instantiate (prefab, pos, Quaternion.identity);
-		beGO.transform.localScale = new Vector3 (ScaleBlastradiusVisual(radius), ScaleBlastradiusVisual(radius), 1);
-
-		//SpriteRenderer beSR = beGO.GetComponent<SpriteRenderer> ();
-		//beSR.color = new Color(beSR.color.r, beSR.color.g, beSR.color.b, 0.8f);
-
-		// TODO: FRIED WHY DOSNT THIS WORK??B
-//		while (beSR.color.a > 0.0f)
-//		{
-//			Debug.Log (beSR.color.a);
-//			beSR.color = new Color(beSR.color.r, beSR.color.g, beSR.color.b, beSR.color.a - (Time.deltaTime / duration));
-//		}
-//		Debug.Log ("while finished");
-
-		//be.transform.localScale = Vector3.one * actualRange(radius);
-		Destroy (beGO, duration);
-		yield return null;
-	}
-		
+				
 	public void Seek(Transform _target) {
 		target = _target;
 		target.GetComponent<MobController> ().mobData.incomingDmg += damage;

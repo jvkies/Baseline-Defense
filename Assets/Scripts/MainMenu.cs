@@ -36,7 +36,7 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	public void LoadSceneLazy() {
-		GameManager.instance.LoadScene ("Game");
+		GameManager.instance.LoadScene ("CutsceneAlphaDisclaimer");
 	}
 
 	public void ToHighscores() {

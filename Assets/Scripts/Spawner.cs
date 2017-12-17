@@ -151,8 +151,8 @@ public class Spawner : MonoBehaviour {
 		if (waveID > 30) {
 			if (_mob.armor != 0)
 				_mob.armor += 1;
-			_mob.health += _mob.health * 0.7f;
-			_mob.maxHealth += _mob.maxHealth * 0.7f;
+			_mob.health += _mob.health * 0.6f;
+			_mob.maxHealth += _mob.maxHealth * 0.6f;
 		}
 		if (waveID > 40) {
 			if (_mob.armor != 0)
@@ -232,7 +232,6 @@ public class Spawner : MonoBehaviour {
 	private float TotalWaveHealth( int waveID) {
 		string mobID = NextMob (waveID);
 		int mobPerWave = MobsPerWave(waveID, mobID); 
-		Debug.Log (mobID);
 		Mob mobData = ScaleMob (GameManager.instance.mobs [mobID].Copy (), waveID);
 
 		return mobPerWave * mobData.maxHealth;

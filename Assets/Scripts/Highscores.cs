@@ -14,7 +14,7 @@ public class Highscores : MonoBehaviour {
 	private float waitBetweenSteps = 0.05f;
 	// TODO: This should probably be in a config file
 	private string postUrl = "http://www.jovin.de/gaming/BaselineDefenseHighscores.php";
-	private string secretKey = "abc123";
+	private string secretKey = "4cbefedaccc27530ccd42351484de80c";
 
 	public float countTime = 3f;				// time the counting animation should be running
 	public string errorText = "Sorry!  Could  not  retrieve  highscores.";
@@ -43,25 +43,33 @@ public class Highscores : MonoBehaviour {
 				submitPanel.SetActive (false);
 			}
 		}
-			
+
+		GetVersion (processGetVersion);
 		GetHighscores (processHighscoreResult);
 	}
 
 	IEnumerator CountTo(int countTo, Text textField, bool isTime = false) {
-		int currentCount = 0;
-
-		// TODO: this is working but not fast enough / framerate dependant, maybe try this: https://answers.unity.com/questions/1124303/animate-a-count-how-to-make-a-count-to-grow-smooth.html
-		waitBetweenSteps = countTime / countTo;
+		float currentCount = 0;
 
 		while (currentCount <= countTo) {
 			if (isTime) {
-				textField.text = FormatSecondsToReadableTime(currentCount);
+				textField.text = FormatSecondsToReadableTime(Mathf.RoundToInt( currentCount));
 			} else {
-				textField.text = currentCount.ToString ();
+				textField.text = Mathf.RoundToInt(currentCount).ToString();
 			}
-			currentCount += 1;
-			yield return new WaitForSeconds (waitBetweenSteps);
+
+			currentCount += Time.deltaTime / countTime * countTo;
+
+			yield return null;
 		}
+
+		if (isTime) {
+			textField.text = FormatSecondsToReadableTime(Mathf.RoundToInt( countTo));
+		} else {
+			//textField.text = Mathf.Lerp(0f, (float)countTo, Time.deltaTime / countTime).ToString ();
+			textField.text = Mathf.RoundToInt(countTo).ToString();
+		}
+
 	}
 
 	private string FormatSecondsToReadableTime (int seconds) {
@@ -104,29 +112,46 @@ public class Highscores : MonoBehaviour {
 		StartCoroutine (SendPostRequest(postUrl, form, successCallback));
 	}
 
-	public void SendHighscore()
+	public void GetVersion(Action<string> successCallback)
 	{
-		submitButton.interactable = false;
-		submitButtonText.text = "... sending ...";
-
-		string name = playernameInput.text;
-		int wave = GameManager.instance.highscore ["wave"];
-		int time = GameManager.instance.highscore ["time"];
-		int mobs = GameManager.instance.highscore ["mobs"];
-		string hash = Md5Sum(name + wave + time + mobs + secretKey);
-
 		WWWForm form = new WWWForm();
-		form.AddField("action", "setHighscore");
-		form.AddField("name", name);
-		form.AddField("wave", wave);
-		form.AddField("time", time);
-		form.AddField("mobs", mobs);
-		form.AddField("version", GameManager.instance.version);
-		form.AddField("hash", hash);
-
-		StartCoroutine (SendPostRequest(postUrl, form, sendHighscoreCallback));
+		form.AddField("action", "getVersion");
+		StartCoroutine (SendPostRequest(postUrl, form, successCallback));
+	}
+	 
+	private void processGetVersion (String result) {
+		if (result != "") {
+			Debug.Log( JsonUtility.FromJson<version>(result.Substring (1, result.Length - 2)));
+			//Debug.Log(ver.bd_version);
+		}
 	}
 
+	public void SendHighscore()
+	{
+		if (playernameInput.text.Length >= 2) {
+			
+			submitButton.interactable = false;
+			submitButtonText.text = "... sending ...";
+
+			string name = playernameInput.text;
+			int wave = GameManager.instance.highscore ["wave"];
+			int time = GameManager.instance.highscore ["time"];
+			int mobs = GameManager.instance.highscore ["mobs"];
+			string hash = Md5Sum (name + wave + time + mobs + secretKey);
+
+			WWWForm form = new WWWForm ();
+			form.AddField ("action", "setHighscore");
+			form.AddField ("name", name);
+			form.AddField ("wave", wave);
+			form.AddField ("time", time);
+			form.AddField ("mobs", mobs);
+			form.AddField ("version", GameManager.instance.version);
+			form.AddField ("hash", hash);
+
+			StartCoroutine (SendPostRequest (postUrl, form, sendHighscoreCallback));
+		}
+	}
+		
 	private void processHighscoreResult(String result)
 	{
 		ClearHighscoreContainer ();

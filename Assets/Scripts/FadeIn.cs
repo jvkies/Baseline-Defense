@@ -14,11 +14,6 @@ public class FadeIn : MonoBehaviour {
 		blendImage = GetComponent<Image> ();
 		StartCoroutine (FadeingIn ());
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	IEnumerator FadeingIn() {
 		float t = 1f;
