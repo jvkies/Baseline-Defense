@@ -107,6 +107,11 @@ public class TowerSpot : MonoBehaviour {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
 			}
 		}
+		if (GameManager.instance.isWallSelected == true) {
+			if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
+				GameManager.instance.selectedWall.GetComponent<Wall> ().SelectWall (false);
+			}
+		}
 		if (GameManager.instance.isDragging == true) {
 			
 			if (Input.GetMouseButtonDown (0) && towerInSlot == null && !EventSystem.current.IsPointerOverGameObject ()) {

@@ -123,10 +123,12 @@ public class TowerController : MonoBehaviour {
 
 	public void OnMouseOver() {
 		if (Input.GetMouseButtonDown (0) && !EventSystem.current.IsPointerOverGameObject ()) {
-	
 
 			if (GameManager.instance.isTowerSelected == true) {
 				GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
+			}
+			if (GameManager.instance.isWallSelected == true) {
+				GameManager.instance.selectedWall.GetComponent<Wall> ().SelectWall (false);
 			}
 			if (GameManager.instance.isDragging != true && !menuCanvas.GetComponent<MenuController>().escapeMenuPanel.activeSelf) {
 				selectTower (true);

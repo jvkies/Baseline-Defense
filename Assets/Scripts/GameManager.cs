@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
 	public int wallPercent = 7;
 	public bool isDragging = false;
 	public bool isTowerSelected = false;
+	public bool isWallSelected = false;
 	public bool isGameLost = false;
 	public string musicFolder = "music by neocrey";		// Music in Folder "Resources/music by neocrey"
 	[HideInInspector]
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour {
 	public string version;
 	public GameObject draggedTower;
 	public GameObject selectedTower;
+	public GameObject selectedWall;
 	[HideInInspector]
 	public AudioClip[] musicClipsPreload;
 	public Dictionary<string, Tower> tower;
@@ -229,7 +231,11 @@ public class GameManager : MonoBehaviour {
 				if (isTowerSelected && selectedTower.GetComponent<TowerController>().towerStats.upgradeCost < souls) {
 					menuScript.upgradeButton.GetComponent<Button> ().interactable = true;
 				}
-					
+
+				if (isWallSelected && selectedWall.GetComponent<Wall>().demolishCost < souls) {
+					menuScript.demolishButton.GetComponent<Button> ().interactable = true;
+				}
+
 				if (position == null) {
 					Debug.Log ("Error: position parameter of UpdateSouls can't be empty / null when increading soul amount");
 				}

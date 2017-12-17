@@ -12,15 +12,17 @@ public class MenuController : MonoBehaviour {
 		
 	public Text souls;
 	public Text money;
-	public GameObject towerName;
+	public Text towerName;
 	public GameObject sellButton;
 	public GameObject upgradeButton;
+	public GameObject demolishButton;
 	public GameObject bulletTowerPrefab;
 	//public GameObject bulletTowerButton;
 	public GameObject rockTowerPrefab;
 	public GameObject rockTowerButton;
 	public GameObject waveDisplayer;
 	public GameObject towerMenuPanel;
+	public GameObject wallMenuPanel;
 	public GameObject escapeMenuPanel;
 	public GameObject upgradeDamageValue;
 	public GameObject upgradeFireRateValue;
@@ -30,6 +32,7 @@ public class MenuController : MonoBehaviour {
 	public Text fireRateValue;
 	public Text rangeValue;
 	public Text costValue;
+	public Text demolishValue;
 	public GameObject startWaveContainer;
 	public Text tipText;
 	public Text waveButtonText;
@@ -97,8 +100,7 @@ public class MenuController : MonoBehaviour {
 		fireRateValue.text = towerStats.towerFireRate.ToString();
 		rangeValue.text = towerStats.towerRange.ToString();
 		costValue.text = towerStats.towerCost.ToString();
-
-		towerName.GetComponent<Text> ().text = towerStats.towerName;
+		towerName.text = towerStats.towerName;
 
 		sellButton.SetActive (isNoPreview);
 		upgradeButton.SetActive (isNoPreview);
@@ -135,8 +137,36 @@ public class MenuController : MonoBehaviour {
 		towerMenuPanel.SetActive (false);
 	}
 
+	public void DemolishWall() {
+		if (GameManager.instance.isWallSelected) {
+			GameManager.instance.selectedWall.GetComponent<Wall>().DemolishWall ();
+		}
+	}
+
+    public void DisplayWallMenu(int demolishCost)
+    {
+
+		demolishButton.SetActive (true);
+		demolishValue.text = demolishCost.ToString();
+
+    	if (demolishCost > GameManager.instance.souls)
+    	{
+			demolishButton.GetComponent<Button> ().interactable = false;
+   		}
+   		else
+   		{
+			demolishButton.GetComponent<Button> ().interactable = true;
+        }
+		wallMenuPanel.SetActive (true);
+    }
+
+    public void HideWallMenu()
+    {
+		wallMenuPanel.SetActive (false);
+    }
+
 	public void DisplayWin() {
-		waveDisplayer.GetComponent<Text> ().text = "You Win!"; 
+		waveDisplayer.GetComponent<Text> ().text = "You Win!";
 		waveDisplayer.GetComponent<Text> ().color = new Color32 (165, 255, 165, 255); 
 		waveDisplayer.SetActive (true);
 	}
