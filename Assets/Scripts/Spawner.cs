@@ -48,7 +48,7 @@ public class Spawner : MonoBehaviour {
 		buttonEffectImage.color = Color.Lerp (standardColor, highlightColor, colorCurve.Evaluate (deltaSum));
 		deltaSum += Time.deltaTime;
 
-		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf && waveMob.Count <= maxSimulWaves) {
+		if (Input.GetKeyDown (KeyCode.Space) && startWaveContainer.activeSelf && waveMob.Count <= maxSimulWaves && GameManager.instance.waveID < maxWaveAmount) {
 			// TODO: only if the next wave should be able to be called..
 			NextWave ();
 		}
@@ -245,6 +245,10 @@ public class Spawner : MonoBehaviour {
 			if (_waveID == 1) {
 				GameManager.instance.startWaveTime = Time.time;
 			} 
+
+			if (_waveID == maxWaveAmount) {
+				startWaveContainer.SetActive (false);
+			}
 
 			waveMob.Add (_waveID, new List<GameObject> ());
 			waveTime.Add (_waveID, Time.time);

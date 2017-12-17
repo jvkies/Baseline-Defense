@@ -147,6 +147,7 @@ public class GameManager : MonoBehaviour {
 		isGameLost = false;
 		isDragging = false;
 		souls = 141;
+		isTowerSelected = false;
 
 		menuScript.UpdateSouls (souls.ToString ());
 		SpawnSouls (souls, yellowCrystal.transform.position);

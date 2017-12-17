@@ -216,9 +216,6 @@ public class MenuController : MonoBehaviour {
 
 	public void Retry() {
 		CloseEscapeMenu ();
-		if (GameManager.instance.isTowerSelected)
-			GameManager.instance.selectedTower.GetComponent<TowerController> ().selectTower (false);
-		
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 	}
 

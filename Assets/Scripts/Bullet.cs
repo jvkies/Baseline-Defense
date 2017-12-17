@@ -16,7 +16,6 @@ public class Bullet : MonoBehaviour {
 
 	void Start() {
 	    lastTarget = target;
-		Debug.Log ("lastTarget: " + lastTarget);
 	}
 
 	// Update is called once per frame
