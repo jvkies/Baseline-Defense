@@ -170,9 +170,9 @@ public class GameManager : MonoBehaviour {
 		mobs.Add ("groupblob", 	new Mob ("groupblob", "Group Blob", 	 	0,  1,     1,  10,  10, 0, 0, 1, blob));
 		mobs.Add ("fastblob",	new Mob ("fastblob", "Fast Blob", 	 	 	0,  1,  1.5f,   8,   8, 0, 0, 1, fastBlob));
 		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	0,  1, 0.7f,   10,   10, 1, 0, 1, armorBlob));
-		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 5, blobBoss));
-		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 130, 130, 0, 0, 5, fastBoss));
-		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.6f, 130, 130, 3, 0, 5, armorBoss));
+		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 10, blobBoss));
+		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 130, 130, 0, 0, 10, fastBoss));
+		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.6f, 130, 130, 3, 0, 10, armorBoss));
 	}
 
 	public void InitWalls() {
