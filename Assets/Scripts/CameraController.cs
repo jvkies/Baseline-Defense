@@ -21,7 +21,6 @@ public class CameraController : MonoBehaviour {
 
 	void Start() {
 		cam = Camera.main;
-		Debug.Log ("Aspect ratio: "+cam.aspect);
 	}
 
 	void LateUpdate () {
@@ -36,8 +35,9 @@ public class CameraController : MonoBehaviour {
 		// zoom
 		float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
 		float zoom = GetComponent<Camera> ().orthographicSize;
-		float newSize = zoom += scroll;
-		GetComponent<Camera> ().orthographicSize = Mathf.Clamp(newSize, minZoom, maxZoom);
+		zoom += scroll;
+		float cZoom =  Mathf.Clamp(zoom, minZoom, maxZoom);
+		GetComponent<Camera> ().orthographicSize = cZoom;
 
 		// click and drag
 		if( Input.GetMouseButtonDown( 0 ) ) {
@@ -69,8 +69,8 @@ public class CameraController : MonoBehaviour {
 			pos.x -= panSpeed * Time.deltaTime;
 		}
 
-		pos.y = Mathf.Clamp (pos.y, lerpZoom(-limitY(zoom), -limitY(zoom), zoom) + gameFieldOffsetY, lerpZoom(limitY(zoom), limitY(zoom), zoom) + gameFieldOffsetY);
-		pos.x = Mathf.Clamp (pos.x, lerpZoom(-limitX(zoom), -limitX(zoom), zoom), lerpZoom(limitX(zoom), limitX(zoom) + menuOffset, zoom));
+		pos.y = Mathf.Clamp (pos.y, lerpZoom(-limitY(cZoom), -limitY(cZoom), cZoom) + gameFieldOffsetY, lerpZoom(limitY(cZoom), limitY(cZoom), cZoom) + gameFieldOffsetY);
+		pos.x = Mathf.Clamp (pos.x, lerpZoom(-limitX(cZoom), -limitX(cZoom), cZoom), lerpZoom(limitX(cZoom), limitX(cZoom) + menuOffset, cZoom));
 
 		transform.position = pos;
 
