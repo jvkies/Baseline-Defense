@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	private Transform target;
+	private Transform lastTarget;
 
 	public float aoeRange = 0.2f;
 
@@ -14,13 +15,19 @@ public class Bullet : MonoBehaviour {
 	public GameObject aoeEffectPrefab;
 
 	void Start() {
+	    lastTarget = target;
+		Debug.Log ("lastTarget: " + lastTarget);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (target == null) {
-			Destroy (gameObject);
-			return;
+		if (target == null)  {
+		    if(aoeRange > 0)
+		    {
+				explodeAoeBullet ();
+		    }
+            Destroy (gameObject);
+            return;
 		}
 
 		Vector3 dir = target.position - transform.position;
@@ -29,38 +36,37 @@ public class Bullet : MonoBehaviour {
 		transform.Translate (dir.normalized * distanceThisFrame, Space.World);
 	}
 		 
-	void OnTriggerEnter2D(Collider2D collider2d) {
-		// Calculates Targets for AoE Damage and applies Damage
-		// TODO: bullet can possibly collide with another bullet? Bother are triggers
-		// TODO: collides with the first mob it hits, not neccecary the actual target
-		if (aoeRange != 0) 
-		{
-			//StartCoroutine( BlastEffect (aoeEffectPrefab, transform.position, aoeRange, 0.2f));
-			GameObject beGO = Instantiate (aoeEffectPrefab, transform.position, Quaternion.identity);
-			beGO.transform.localScale = new Vector3 (ScaleBlastradiusVisual(aoeRange), ScaleBlastradiusVisual(aoeRange), 1);
-
-			Collider2D[] colliders = Physics2D.OverlapCircleAll (transform.position, aoeRange);
-			// TODO: colliders contains the TowerSpot colliders aswell
-
-			Debug.Log ("enemys hit: " + colliders.Length);
-			for (int i = 0; i < colliders.Length; i++) 
-			{
-				MobController enemyC = colliders [i].GetComponent<MobController> ();
-				if (enemyC != null) 
-				{
-					enemyC.TakeDamage (damage);
+	void OnTriggerEnter2D(Collider2D bulletCollision) {
+		if (target != null) {
+			if (bulletCollision == target.gameObject.GetComponent<Collider2D> ()) {
+				target.GetComponent<MobController> ().mobData.incomingDmg -= damage;
+				if (aoeRange > 0) { 
+					explodeAoeBullet ();
+				} else {
+					target.GetComponent<MobController> ().TakeDamage (damage);
 				}
+				Destroy (gameObject);
 			}
-		} 
-		// Applies Damage to Non AoE Target
-		else 
-		{
-			// TODO: can cause error when the target is already dead
-			target.GetComponent<MobController> ().TakeDamage (damage);
+		} else {
+			Destroy (gameObject);
 		}
-			
-		target.GetComponent<MobController> ().mobData.incomingDmg -= damage;
-		Destroy (gameObject);
+	}
+
+	private void explodeAoeBullet()
+	{
+		//StartCoroutine( BlastEffect (aoeEffectPrefab, transform.position, aoeRange, 0.2f));
+		GameObject beGO = Instantiate (aoeEffectPrefab, transform.position, Quaternion.identity);
+		beGO.transform.localScale = new Vector3 (ScaleBlastradiusVisual (aoeRange), ScaleBlastradiusVisual (aoeRange), 1);
+		beGO.GetComponent<SpriteRenderer> ().color = GetComponent<SpriteRenderer> ().color;
+
+		Collider2D[] colliders = Physics2D.OverlapCircleAll (transform.position, aoeRange);
+
+		for (int i = 0; i < colliders.Length; i++) {
+			MobController enemyC = colliders [i].GetComponent<MobController> ();
+			if (enemyC != null) {
+				enemyC.TakeDamage (damage);
+			}
+		}
 	}
 				
 	public void Seek(Transform _target) {
