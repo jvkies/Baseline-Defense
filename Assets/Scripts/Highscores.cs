@@ -109,6 +109,7 @@ public class Highscores : MonoBehaviour {
 	{
 		WWWForm form = new WWWForm();
 		form.AddField("action", "getHighscore");
+		form.AddField("version", GameManager.instance.version);
 		StartCoroutine (SendPostRequest(postUrl, form, successCallback));
 	}
 

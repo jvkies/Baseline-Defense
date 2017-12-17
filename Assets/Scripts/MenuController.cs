@@ -27,10 +27,12 @@ public class MenuController : MonoBehaviour {
 	public GameObject upgradeDamageValue;
 	public GameObject upgradeFireRateValue;
 	public GameObject upgradeRangeValue;
+	public GameObject upgradeAoeValue;
 	public GameObject upgradeCostValue;
 	public Text damageValue;
 	public Text fireRateValue;
 	public Text rangeValue;
+	public Text aoeValue;
 	public Text costValue;
 	public Text demolishValue;
 	public GameObject startWaveContainer;
@@ -100,6 +102,7 @@ public class MenuController : MonoBehaviour {
 		fireRateValue.text = towerStats.towerFireRate.ToString();
 		rangeValue.text = towerStats.towerRange.ToString();
 		costValue.text = towerStats.towerCost.ToString();
+		aoeValue.text = towerStats.aoeRange.ToString();
 		towerName.text = towerStats.towerName;
 
 		sellButton.SetActive (isNoPreview);
@@ -107,6 +110,7 @@ public class MenuController : MonoBehaviour {
 		upgradeDamageValue.SetActive (isNoPreview);
 		upgradeRangeValue.SetActive (isNoPreview);
 		upgradeFireRateValue.SetActive (isNoPreview);
+		upgradeAoeValue.SetActive (isNoPreview);
 		upgradeCostValue.SetActive (isNoPreview);
 
 		if (towerStats.upgradeID == null) {
@@ -114,6 +118,7 @@ public class MenuController : MonoBehaviour {
 			upgradeDamageValue.SetActive (false);
 			upgradeRangeValue.SetActive (false);
 			upgradeFireRateValue.SetActive (false);
+			upgradeAoeValue.SetActive (false);
 			upgradeCostValue.SetActive (false);
 
 		} else {
@@ -121,6 +126,7 @@ public class MenuController : MonoBehaviour {
 			upgradeDamageValue.GetComponent<Text> ().text = upgradeTower.towerDamage.ToString();
 			upgradeFireRateValue.GetComponent<Text> ().text = upgradeTower.towerFireRate.ToString();
 			upgradeRangeValue.GetComponent<Text> ().text = upgradeTower.towerRange.ToString();
+			upgradeAoeValue.GetComponent<Text> ().text = upgradeTower.aoeRange.ToString();
 			upgradeCostValue.GetComponent<Text> ().text = towerStats.upgradeCost.ToString();
 			if (towerStats.upgradeCost > GameManager.instance.souls) {
 				upgradeButton.GetComponent<Button> ().interactable = false;
