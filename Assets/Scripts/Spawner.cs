@@ -266,7 +266,7 @@ public class Spawner : MonoBehaviour {
 	{
 		if (GameManager.instance.waveID != maxWaveAmount) 
 		{
-			GameManager.instance.UpdateSouls (interest, GameManager.instance.yellowCrystal);
+			GameManager.instance.UpdateSouls (interest, GameManager.instance.homeCrystal);
 			Debug.Log("payed interest: " + interest);
 			interestGain.text = "+ " + interest;
 			interestGain.color = new Color(interestGain.color.r, interestGain.color.g, interestGain.color.b, 1);

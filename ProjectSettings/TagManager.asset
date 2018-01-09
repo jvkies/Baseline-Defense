@@ -16,6 +16,7 @@ TagManager:
   - TowerSpot
   - YellowCrystal
   - GameManager
+  - HomeCrystal
   layers:
   - Default
   - TransparentFX

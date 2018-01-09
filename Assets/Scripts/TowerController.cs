@@ -164,7 +164,7 @@ public class TowerController : MonoBehaviour {
 		towerSpot.GetComponent<BoxCollider2D> ().enabled = true;
 		towerSpot.GetComponent<TowerSpot>().towerInSlot = null;
 
-		GameManager.instance.UpdateSouls (Mathf.FloorToInt( towerStats.towerCost * sellMultiplier), GameManager.instance.yellowCrystal);
+		GameManager.instance.UpdateSouls (Mathf.FloorToInt( towerStats.towerCost * sellMultiplier), gameObject);
 		AstarPath.active.UpdateGraphs (gameObject.GetComponent<BoxCollider2D> ().bounds);
 
 		// tell every Mob to calculate a new Path
@@ -179,7 +179,7 @@ public class TowerController : MonoBehaviour {
 		// Destroy instance and create a new or update values?
 
 		if (towerStats.upgradeID != null && GameManager.instance.souls > towerStats.upgradeCost) {
-			GameManager.instance.UpdateSouls (-towerStats.upgradeCost);
+			GameManager.instance.UpdateSouls (-towerStats.upgradeCost, gameObject);
 			towerStats = GameManager.instance.tower [towerStats.upgradeID];	// updating its stats
 			menuCanvas.GetComponent<MenuController> ().DisplayTowerMenu (towerStats);
 			towerHead.GetComponent<SpriteRenderer> ().sprite = towerStats.towerImageHead;

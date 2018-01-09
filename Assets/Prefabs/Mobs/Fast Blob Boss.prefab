@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 114997513670160632}
   - component: {fileID: 114773152479377476}
   - component: {fileID: 60214482638945024}
+  - component: {fileID: 210317629548598150}
   m_Layer: 0
   m_Name: Fast Blob Boss
   m_TagString: Mob
@@ -239,6 +240,16 @@ MonoBehaviour:
     tagsChange: -1
     tagsSet: -1
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!210 &210317629548598150
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1395960154840638}
+  m_Enabled: 1
+  m_SortingLayerID: 1266408389
+  m_SortingLayer: 2
+  m_SortingOrder: 1
 --- !u!212 &212148024788448314
 SpriteRenderer:
   m_ObjectHideFlags: 1

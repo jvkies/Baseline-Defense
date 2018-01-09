@@ -214,16 +214,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   souls: 141
+  startSouls: 141
   soulSpread: 0.5
   wallPercent: 5
   isDragging: 0
   isTowerSelected: 0
+  isWallSelected: 0
   isGameLost: 0
   musicFolder: music by neocrey
   startWaveTime: 0
   waveID: 0
+  version: 
   draggedTower: {fileID: 0}
   selectedTower: {fileID: 0}
+  selectedWall: {fileID: 0}
   musicClipsPreload: []
   wallPrefab: {fileID: 1892069066457926, guid: edfb0190f23ff4c9e92731465d88ad86, type: 2}
   blob: {fileID: 1395960154840638, guid: cd34b62f37431477ab32ccb065851266, type: 2}
@@ -238,4 +242,4 @@ MonoBehaviour:
     type: 3}
   rocktowerHeadWhite: {fileID: 21300000, guid: 5d8022c61c5c64914bea35e261f3366b, type: 3}
   soulPrefab: {fileID: 1465413052787852, guid: 73ba100a5655748f1a4c97ab9ca8ba54, type: 2}
-  yellowCrystal: {fileID: 0}
+  homeCrystal: {fileID: 0}

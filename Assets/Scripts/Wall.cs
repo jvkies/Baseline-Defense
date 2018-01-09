@@ -61,20 +61,20 @@ public class Wall : MonoBehaviour {
 
 	public void DemolishWall()
 	{
-			SelectWall (false);
-    		//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
-    		wallSpot.GetComponent<BoxCollider2D> ().enabled = true;
-    		wallSpot.GetComponent<TowerSpot>().towerInSlot = null;
+		SelectWall (false);
+    	//GameManager.instance.money += towerStats.towerCost * sellMultiplier;
+    	wallSpot.GetComponent<BoxCollider2D> ().enabled = true;
+    	wallSpot.GetComponent<TowerSpot>().towerInSlot = null;
 
-		GameManager.instance.UpdateSouls (((-1) * demolishCost), GameManager.instance.yellowCrystal);
-    		AstarPath.active.UpdateGraphs (gameObject.GetComponent<BoxCollider2D> ().bounds);
+		GameManager.instance.UpdateSouls (((-1) * demolishCost), gameObject);
+    	AstarPath.active.UpdateGraphs (gameObject.GetComponent<BoxCollider2D> ().bounds);
 
-    		// tell every Mob to calculate a new Path
-    		for (int mobNumber = 0; mobNumber < enemyContainer.transform.childCount; mobNumber++) {
-    			enemyContainer.transform.GetChild (mobNumber).GetComponent<AIPath> ().SearchPath ();
-    		}
-
-    		Destroy (gameObject);
+    	// tell every Mob to calculate a new Path
+    	for (int mobNumber = 0; mobNumber < enemyContainer.transform.childCount; mobNumber++) {
+    		enemyContainer.transform.GetChild (mobNumber).GetComponent<AIPath> ().SearchPath ();
+    	}
+	
+    	Destroy (gameObject);
 	}
 
 }

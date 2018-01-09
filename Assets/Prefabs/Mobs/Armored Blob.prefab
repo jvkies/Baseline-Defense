@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114615363141350574}
   - component: {fileID: 114295246126971324}
   - component: {fileID: 114191731160770408}
+  - component: {fileID: 210654221401430814}
   m_Layer: 0
   m_Name: Armored Blob
   m_TagString: Mob
@@ -211,6 +212,16 @@ MonoBehaviour:
   healthBarPrefab: {fileID: 1402939198065474, guid: 7f8fc1af015594fd8ba961d0e0d0f332,
     type: 2}
   soul: {fileID: 1465413052787852, guid: 73ba100a5655748f1a4c97ab9ca8ba54, type: 2}
+--- !u!210 &210654221401430814
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1395960154840638}
+  m_Enabled: 1
+  m_SortingLayerID: 1266408389
+  m_SortingLayer: 2
+  m_SortingOrder: 1
 --- !u!212 &212648863451974074
 SpriteRenderer:
   m_ObjectHideFlags: 1

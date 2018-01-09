@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Reflection;
+//using System.Reflection;
 using Random = UnityEngine.Random;
 
 //[assembly:AssemblyVersion ("1.0.*")]
@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour {
 	//private Spawner spawnblock;
 	//private UnityEngine.Object[] MusicClips;			// Music disabled due to long load times
 
-	public int souls = 71;
+	public int souls = 0;								// current souls the player has
+	public int startSouls = 141;						// amount of souls the player starts with
 	public float soulSpread = 2f;						// how large the area is when multiple souls are beeing spawned
 	public int wallPercent = 7;
 	public bool isDragging = false;
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject soulPrefab;
 	public Queue<GameObject> soulInstances;
 	[HideInInspector]
-	public GameObject yellowCrystal;
+	public GameObject homeCrystal;
 
 	void Awake () {
 		if (instance == null) {
@@ -80,7 +81,7 @@ public class GameManager : MonoBehaviour {
 			try {
 				menuScript = GameObject.FindWithTag ("MenuCanvas").GetComponent<MenuController> ();
 				towerSpots = GameObject.FindWithTag ("TowerSpotContainer").transform;
-				yellowCrystal = GameObject.FindWithTag ("YellowCrystal");
+				homeCrystal = GameObject.FindWithTag ("HomeCrystal");
 
 				InitNewGame();
 
@@ -146,11 +147,11 @@ public class GameManager : MonoBehaviour {
 		waveID = 0;
 		isGameLost = false;
 		isDragging = false;
-		souls = 141;
+		souls = startSouls;
 		isTowerSelected = false;
 
 		menuScript.UpdateSouls (souls.ToString ());
-		SpawnSouls (souls, yellowCrystal.transform.position);
+		SpawnSouls (souls, homeCrystal.transform.position);
 	}
 
 	private void InitTowerAndMobData() {
@@ -172,7 +173,7 @@ public class GameManager : MonoBehaviour {
 		mobs.Add ("fastblob",	new Mob ("fastblob", "Fast Blob", 	 	 	0,  1,  1.5f,   8,   8, 0, 0, 1, fastBlob));
 		mobs.Add ("armorblob", 	new Mob ("armorblob", "Armored Blob", 	 	0,  1, 0.7f,   10,   10, 1, 0, 1, armorBlob));
 		mobs.Add ("blobboss", 	new Mob ("blobboss", "Blob Boss", 			0, 20, 0.75f, 130, 130, 0, 0, 10, blobBoss));
-		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 130, 130, 0, 0, 10, fastBoss));
+		mobs.Add ("fastboss", 	new Mob ("fastboss", "Fast Blob Boss",  	0, 20, 1.25f, 104, 104, 0, 0, 10, fastBoss));
 		mobs.Add ("armorboss", 	new Mob ("armorboss", "Armored Blob Boss", 	0, 20, 0.6f, 130, 130, 3, 0, 10, armorBoss));
 	}
 
@@ -224,7 +225,8 @@ public class GameManager : MonoBehaviour {
 					amount = -soulInstances.Count;
 				}
 				for (int i = 0; i > amount; i--) {
-					Destroy (soulInstances.Dequeue ());
+					//Destroy (soulInstances.Dequeue ());
+					soulInstances.Dequeue().GetComponent<SoulController>().Despawn(position);
 				}
 			} else {
 				// gaining money
@@ -270,7 +272,8 @@ public class GameManager : MonoBehaviour {
 			}
 
 			GameObject soulGO = Instantiate (soulPrefab, position + offsetPos, Quaternion.identity);
-			soulGO.transform.SetParent (yellowCrystal.transform);
+			soulGO.transform.SetParent (homeCrystal.transform);
+			//soulGO.GetComponent<Rigidbody2D>().velocity = Random.insideUnitCircle * 10;
 			soulInstances.Enqueue (soulGO);
 		}
 	}

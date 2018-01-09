@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212128833125561130}
   - component: {fileID: 58860464369842728}
   - component: {fileID: 50818783631216396}
+  - component: {fileID: 114764538351626986}
   m_Layer: 8
   m_Name: Soul
   m_TagString: Untagged
@@ -54,7 +55,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.5
+  m_LinearDrag: 0.85
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -68,7 +69,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1465413052787852}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -76,7 +77,21 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.85
+  m_Radius: 0.0001
+--- !u!114 &114764538351626986
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1465413052787852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5465cb3f94e7749e3aaf786c92eb613e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  despawnTime: 1
+  thrust: 120
+  yellowCrystal: {fileID: 0}
 --- !u!212 &212128833125561130
 SpriteRenderer:
   m_ObjectHideFlags: 1

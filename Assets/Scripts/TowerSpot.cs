@@ -94,7 +94,7 @@ public class TowerSpot : MonoBehaviour {
 			}
 
 			//GameManager.instance.money -= towerInstance.GetComponent<TowerController> ().towerStats.towerCost;
-			GameManager.instance.UpdateSouls (-towerInstance.GetComponent<TowerController> ().towerStats.towerCost);
+			GameManager.instance.UpdateSouls (-towerInstance.GetComponent<TowerController> ().towerStats.towerCost, gameObject);
 
 			return true;
 		}

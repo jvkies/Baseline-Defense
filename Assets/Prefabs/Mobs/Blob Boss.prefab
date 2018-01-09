@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 114043104011157246}
   - component: {fileID: 114997513670160632}
   - component: {fileID: 114773152479377476}
+  - component: {fileID: 210617854939017058}
   m_Layer: 0
   m_Name: Blob Boss
   m_TagString: Mob
@@ -211,6 +212,16 @@ MonoBehaviour:
     tagsChange: -1
     tagsSet: -1
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!210 &210617854939017058
+SortingGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1395960154840638}
+  m_Enabled: 1
+  m_SortingLayerID: 1266408389
+  m_SortingLayer: 2
+  m_SortingOrder: 1
 --- !u!212 &212648863451974074
 SpriteRenderer:
   m_ObjectHideFlags: 1
